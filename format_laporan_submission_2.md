@@ -200,14 +200,45 @@ print(top_n_recommended_games)
 
 ## Evaluation
 
-# Evaluation
+### 1. Pendahuluan
+Pada bagian ini, sistem rekomendasi yang dikembangkan akan dievaluasi dengan menggunakan dua metrik utama: **Precision at K** dan **Recall at K**. Evaluasi dilakukan dengan cara mengukur seberapa baik sistem dalam merekomendasikan item yang relevan kepada pengguna berdasarkan daftar rekomendasi yang diberikan oleh sistem.
 
-### 1. Metrik Evaluasi yang Digunakan
+### 2. Metrik Evaluasi
 
-Untuk mengevaluasi kinerja sistem rekomendasi berbasis konten, kami menggunakan dua metrik evaluasi utama, yaitu **Precision at K** dan **Recall at K**. Metrik ini digunakan untuk menilai seberapa baik rekomendasi yang diberikan oleh model relevan dengan preferensi pengguna atau game yang diinginkan.
+#### 2.1 Precision at K
+Precision at K adalah metrik yang mengukur proporsi item relevan di antara K rekomendasi teratas yang diberikan oleh sistem. Semakin tinggi nilai precision, semakin baik sistem dalam memberikan rekomendasi yang relevan.
 
-### 1.1. Precision at K
+#### 2.2 Recall at K
+Recall at K adalah metrik yang mengukur proporsi item relevan yang ditemukan dalam K rekomendasi teratas dibandingkan dengan total jumlah item relevan yang ada. Metrik ini menunjukkan seberapa banyak item relevan yang ditemukan dalam daftar rekomendasi.
 
-**Precision at K** mengukur seberapa banyak dari rekomendasi yang diberikan yang benar-benar relevan bagi pengguna. Ini dihitung dengan membagi jumlah rekomendasi relevan yang ditemukan dalam **Top K** rekomendasi dengan total jumlah rekomendasi yang diberikan (K).
+### 3. Implementasi dan Evaluasi
 
-Formula:
+Pada bagian ini, dilakukan evaluasi terhadap sistem rekomendasi menggunakan dua metrik tersebut pada sebuah contoh kasus. Dalam hal ini, dilakukan evaluasi pada game **"Wii Sports"** dengan menggunakan data permainan yang relevan.
+
+```python
+# Fungsi Precision at K
+def precision_at_k(recommended, relevant, k=10):
+    recommended_at_k = recommended[:k]  # Mengambil K rekomendasi teratas
+    relevant_recommended = [item for item in recommended_at_k if item in relevant]
+    return len(relevant_recommended) / k
+
+# Fungsi Recall at K
+def recall_at_k(recommended, relevant, k=5):
+    recommended_at_k = recommended[:k]  # Mengambil K rekomendasi teratas
+    relevant_recommended = [item for item in recommended_at_k if item in relevant]
+    return len(relevant_recommended) / len(relevant)
+
+# Contoh Evaluasi untuk game "Wii Sports"
+recommended_games = get_top_n_recommendations('Wii Sports')
+# Misalkan kita punya daftar game relevan untuk "Wii Sports" (berdasarkan genre atau rating yang serupa)
+relevant_games = ['Super Mario Bros.', 'Mario Kart Wii', 'Wii Sports Resort', 'Pokemon Red/Pokemon Blue']
+
+# Menghitung Precision at 5 dan Recall at 5
+precision = precision_at_k(recommended_games.tolist(), relevant_games, k=5)
+recall = recall_at_k(recommended_games.tolist(), relevant_games, k=5)
+
+# Menampilkan hasil
+print(f"Precision at 5: {precision}")
+print(f"Recall at 5: {recall}")
+```
+
