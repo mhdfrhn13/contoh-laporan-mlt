@@ -1,238 +1,213 @@
 # Laporan Proyek Machine Learning - Muhammad Farhan
 
 ## Project Overview
-Dalam era digital saat ini, jumlah konten—baik film, buku, musik, maupun produk e-commerce—telah berkembang secara eksponensial. Pengguna sering kali menghadapi kesulitan dalam menemukan item yang sesuai dengan preferensi mereka karena volume pilihan yang sangat besar. Tanpa sistem rekomendasi yang efektif, pengalaman pengguna dapat menjadi tidak personal dan membingungkan, sehingga menurunkan tingkat kepuasan dan engagement.
-
-Sistem rekomendasi telah menjadi komponen kunci di banyak platform daring seperti Netflix, Amazon, dan Spotify untuk membantu menyajikan konten yang relevan bagi setiap individu. Salah satu pendekatan yang populer adalah **content-based filtering**, di mana karakteristik konten (misalnya genre, judul, kata kunci) digunakan untuk membangun profil item dan profil pengguna, lalu menghitung kemiripan antar item untuk memberikan rekomendasi.
-
-Proyek ini bertujuan mengimplementasikan model content-based filtering yang ringan dan mudah dijalankan di lingkungan Google Colab, dengan memanfaatkan dataset MovieLens “ml-latest-small”. Dataset ini dipilih karena ukurannya yang kecil (sekitar 100.000 rating) sehingga tidak membebani memori, namun sudah menyertakan metadata film (genre, judul) yang memadai untuk eksperimen content-based. Dengan demikian, proyek ini dapat menjadi kerangka kerja pembelajaran dan prototipe awal sebelum diterapkan pada skala data yang lebih besar.
+Proyek ini bertujuan untuk mengembangkan sistem rekomendasi berbasis konten untuk video game dengan menggunakan dataset yang mencakup informasi tentang genre, platform, rating pengguna, dan penjualan global game. Dengan banyaknya pilihan game yang tersedia, sistem rekomendasi berbasis konten ini diharapkan dapat membantu pengguna menemukan game yang relevan dengan preferensi mereka, berdasarkan kesamaan konten seperti genre, platform, dan penerbit. Sistem ini menggunakan **Cosine Similarity** untuk menghitung kesamaan antar game dan memberikan rekomendasi yang lebih personal tanpa memerlukan data interaksi pengguna sebelumnya. Sistem ini bertujuan untuk meningkatkan pengalaman pengguna dengan membantu mereka menemukan game yang sesuai dengan minat mereka, serta memberikan solusi untuk tantangan yang dihadapi pengguna dalam mencari game yang tepat di pasar yang sangat luas.
 
 ## Business Understanding
 
-### Proses Klarifikasi Masalah
-Pada fase awal proyek, tim melakukan beberapa langkah untuk memahami konteks dan kebutuhan bisnis:
-1. **Wawancara Stakeholder**  
-   - Berdiskusi dengan pengguna akhir dan pemangku kepentingan (mis. manajer produk, tim data) untuk mengidentifikasi kendala utama dalam penemuan konten.  
-2. **Analisis Eksplorasi Sistem Eksisting**  
-   - Mengkaji mekanisme rekomendasi atau filter yang sudah digunakan (jika ada) untuk mengetahui kekuatan dan kelemahannya.  
-3. **Survei Kuantitatif & Kualitatif**  
-   - Mengumpulkan feedback pengguna mengenai kesulitan menemukan film baru, preferensi genre, dan harapan personalisasi.  
-4. **Dokumentasi & Pemetaan Masalah**  
-   - Merumuskan pain points utama dan menyelaraskan ekspektasi antara tim teknis dan bisnis.
-
 ### Problem Statements
-1. **Volume Konten Terlalu Besar**  
-   Pengguna kesulitan menemukan film yang sesuai dengan selera mereka karena katalog yang sangat luas dan tidak terstruktur.  
-2. **Kurang Personalization**  
-   Sistem pencarian berbasis kata kunci atau filter manual tidak cukup memadai untuk memberikan rekomendasi yang relevan dan kontekstual untuk setiap individu.  
-3. **Keterbatasan Sumber Daya Komputasi**  
-   Banyak algoritma rekomendasi canggih memerlukan memori dan waktu komputasi besar, sehingga sulit dijalankan di lingkungan dengan RAM terbatas seperti Google Colab gratis.
+
+- Pengguna sering kali kesulitan menemukan game yang sesuai dengan preferensi pribadi mereka di pasar yang penuh dengan pilihan.
+- Dengan banyaknya genre, platform, dan penerbit yang berbeda, banyak pengguna tidak mengetahui game mana yang paling sesuai dengan minat mereka.
+- Platform distribusi game seperti Steam, PlayStation, dan lainnya menghadapi tantangan dalam menyarankan game yang relevan, terutama bagi pengguna baru atau mereka yang belum memiliki preferensi yang jelas.
+- Pengguna yang tidak dapat menemukan game yang sesuai dengan minat mereka mungkin merasa frustrasi, yang dapat berdampak negatif pada kepuasan dan keterlibatan mereka.
 
 ### Goals
-1. **Membangun Prototipe Content-Based Filtering Ringan**  
-   Menerapkan algoritma yang memanfaatkan metadata film (judul, genre) untuk merekomendasikan konten tanpa memerlukan resource berlebih.  
-2. **Memaksimalkan Relevansi Rekomendasi**  
-   Menghasilkan rekomendasi dengan tingkat akurasi dan kepuasan pengguna yang tinggi—diukur melalui Precision@K dan Recall@K—dengan data lisensi ringan seperti MovieLens “ml-latest-small”.  
-3. **Platform-Agnostik dan Mudah Dioperasikan**  
-   Mendesain pipeline end-to-end (data preparation → feature extraction → modeling → evaluasi) yang dapat dijalankan secara interaktif di Google Colab tanpa konfigurasi kompleks.  
-4. **Menyediakan Dasar untuk Skala Lebih Besar**  
-   Membuat dokumentasi dan kode yang modular sehingga di masa mendatang dapat diadaptasi untuk dataset berukuran lebih besar atau environment produksi.
+
+- Mengembangkan sistem rekomendasi berbasis konten yang dapat memberikan saran game yang relevan kepada pengguna berdasarkan fitur konten game (seperti genre, platform, dan penerbit).
+- Mengatasi masalah pengguna yang kesulitan menemukan game sesuai dengan minat mereka tanpa memerlukan data interaksi pengguna sebelumnya.
+- Menggunakan **Cosine Similarity** untuk menghitung kesamaan antar game berdasarkan fitur-fitur konten mereka, untuk memberikan rekomendasi yang lebih personal dan relevan.
+- Meningkatkan pengalaman pengguna dengan membantu mereka menemukan game yang sesuai dengan preferensi mereka, sehingga meningkatkan kepuasan dan keterlibatan pengguna di platform distribusi game.
    
 ## Data Understanding
-### Sumber Data  
-Dataset yang digunakan adalah **MovieLens ml-latest-small**, diunduh dari:  
-- https://files.grouplens.org/datasets/movielens/ml-latest-small.zip :contentReference[oaicite:0]{index=0}
+### Informasi Umum Dataset
 
-### Deskripsi Umum  
-- **Rating Interaction**: 100 836 entri rating (0.5–5.0) oleh 610 pengguna untuk 9 742 film, periode 29 Maret 1996–24 September 2018 :contentReference[oaicite:1]{index=1}  
-- **Tagging Activity**: 3 683 entri tagging teks bebas oleh pengguna :contentReference[oaicite:2]{index=2}  
-- **Metadata Film**: 9 742 film dengan judul & genre  
-- **Link Identifiers**: Mapping `movieId` ke `imdbId` dan `tmdbId`
+Dataset yang digunakan dalam proyek ini adalah dataset **Video Games Sales** yang diambil dari Kaggle, yang mencakup data mengenai video game yang dirilis hingga 22 Desember 2016. Dataset ini berisi informasi tentang penjualan game, rating, dan berbagai fitur lainnya yang terkait dengan game.
 
-### Kondisi Data  
-- Tidak ada missing values pada kolom `userId`, `movieId`, `rating`, `title`, `genres`  
-- Rating dalam increment 0.5 (rentang 0.5–5.0)  
-- Timestamp dalam detik sejak epoch (UTC)  
-- `genres` dipisah dengan karakter `|`
+#### Tautan Sumber Data:
+- Dataset dapat diunduh melalui tautan berikut: [Video Games Sales Dataset on Kaggle](https://www.kaggle.com/datasets/therohk/million-airline-data)
 
-### Variabel/Fitur  
+#### Jumlah Data
+- Dataset ini terdiri dari **16.598 baris** data yang mencakup 11 kolom.
+- Setiap baris mewakili satu game yang telah dirilis, dengan informasi mengenai penjualan dan atribut lainnya.
 
-#### ratings.csv  
-- `userId` (int) — ID unik pengguna  
-- `movieId` (int) — ID unik film  
-- `rating` (float) — Nilai rating (0.5–5.0)  
-- `timestamp` (int) — Waktu rating (epoch seconds, UTC)
+### Kondisi Data
+- Dataset ini berisi beberapa nilai kosong (missing values) pada beberapa kolom seperti `Critic_Score`, `User_Score`, dan `Rating`. Oleh karena itu, beberapa baris data perlu dibersihkan atau diproses sebelum digunakan dalam analisis atau model.
+- Kolom yang mengandung nilai `NaN` perlu ditangani agar sistem rekomendasi dapat berjalan dengan lancar tanpa mengganggu perhitungan similarity antar game.
 
-#### movies.csv  
-- `movieId` (int) — ID unik film  
-- `title` (string) — Judul film + tahun rilis dalam tanda kurung  
-- `genres` (string) — Genre film, dipisah `|` (contoh: `Action|Adventure`)
+### Informasi Mengenai Variabel/Fitur dalam Dataset
+
+Dataset ini memiliki beberapa variabel (fitur) yang digunakan untuk analisis dan pembuatan sistem rekomendasi, di antaranya:
+
+1. **Name**:  
+   - Tipe: Kategorikal  
+   - Deskripsi: Nama dari game.
+   
+2. **Platform**:  
+   - Tipe: Kategorikal  
+   - Deskripsi: Platform tempat game ini dirilis, seperti 'Wii', 'PS4', 'PC', dll.
+
+3. **Year_of_Release**:  
+   - Tipe: Numerik  
+   - Deskripsi: Tahun saat game tersebut dirilis. Beberapa nilai tahun mungkin hilang, sehingga harus diperiksa lebih lanjut.
+
+4. **Genre**:  
+   - Tipe: Kategorikal  
+   - Deskripsi: Genre game, seperti 'Action', 'Sports', 'Racing', 'Platform', dll.
+
+5. **Publisher**:  
+   - Tipe: Kategorikal  
+   - Deskripsi: Nama penerbit game, seperti 'Nintendo', 'EA Sports', dll.
+
+6. **NA_Sales**:  
+   - Tipe: Numerik  
+   - Deskripsi: Penjualan game di wilayah North America (Amerika Utara), dalam juta unit.
+
+7. **EU_Sales**:  
+   - Tipe: Numerik  
+   - Deskripsi: Penjualan game di wilayah Eropa, dalam juta unit.
+
+8. **JP_Sales**:  
+   - Tipe: Numerik  
+   - Deskripsi: Penjualan game di wilayah Jepang, dalam juta unit.
+
+9. **Other_Sales**:  
+   - Tipe: Numerik  
+   - Deskripsi: Penjualan game di wilayah lain, dalam juta unit.
+
+10. **Global_Sales**:  
+    - Tipe: Numerik  
+    - Deskripsi: Total penjualan game secara global, dalam juta unit.
+
+11. **Critic_Score**:  
+    - Tipe: Numerik  
+    - Deskripsi: Skor dari kritik atau ulasan profesional untuk game tersebut, dalam skala 1-100.
+
+12. **Critic_Count**:  
+    - Tipe: Numerik  
+    - Deskripsi: Jumlah kritik yang memberikan ulasan untuk game tersebut.
+
+13. **User_Score**:  
+    - Tipe: Numerik  
+    - Deskripsi: Skor yang diberikan oleh pengguna pada game tersebut, dalam skala 1-10.
+
+14. **User_Count**:  
+    - Tipe: Numerik  
+    - Deskripsi: Jumlah pengguna yang memberikan skor untuk game tersebut.
+
+15. **Developer**:  
+    - Tipe: Kategorikal  
+    - Deskripsi: Nama pengembang game.
+
+16. **Rating**:  
+    - Tipe: Kategorikal  
+    - Deskripsi: Rating yang diberikan untuk game (misalnya, 'E' untuk Everyone, 'T' untuk Teen).
+
+#### Keterangan
+- **Data Missing**: Beberapa kolom seperti `Critic_Score`, `User_Score`, dan `Rating` mengandung nilai yang hilang. Penanganan nilai kosong ini akan dilakukan selama tahap preprocessing, seperti menghapus baris yang mengandung nilai `NaN` atau mengisi nilai kosong dengan estimasi berdasarkan distribusi data lainnya.
+  
+- **Variabel yang Digunakan untuk Rekomendasi**: Kolom **Name**, **Genre**, **Platform**, dan **Publisher** akan digunakan untuk membuat fitur yang akan digunakan dalam sistem rekomendasi berbasis konten.
+
+Dengan memahami struktur dan kondisi data ini, kita dapat lebih mudah mempersiapkan data untuk proses **preprocessing** dan kemudian menggunakannya untuk membangun model rekomendasi berbasis konten yang lebih efektif.
 
 ## Data Preparation
-Berikut tahapan Data Preparation yang dilakukan secara berurutan di notebook:
+Pada tahap ini, kami melakukan beberapa langkah untuk mempersiapkan data yang akan digunakan dalam pembangunan model sistem rekomendasi berbasis konten. Langkah-langkah ini termasuk pembersihan data, pengisian nilai kosong, serta transformasi data untuk memastikan bahwa dataset siap digunakan dalam analisis dan pembuatan model. Berikut adalah teknik yang diterapkan dalam persiapan data:
 
-1. **Load Data**  
-   - **Teknik**: Membaca file CSV menggunakan `pandas.read_csv`  
-   - **Langkah**:
-     ```python
-     ratings = pd.read_csv('ml-latest-small/ratings.csv')
-     movies  = pd.read_csv('ml-latest-small/movies.csv')
-     ```
+### 1. Menghapus Baris yang Mengandung Nilai Kosong
 
-2. **Inspeksi Missing & Duplikasi**  
-   - **Teknik**:  
-     - Deteksi nilai kosong dengan `df.isnull().sum()`  
-     - Hapus baris duplikat dengan `df.drop_duplicates(inplace=True)`  
-   - **Langkah**:
-     ```python
-     ratings.isnull().sum()
-     movies.isnull().sum()
-     ratings.drop_duplicates(inplace=True)
-     movies.drop_duplicates(inplace=True)
-     ```
+Langkah pertama adalah menghapus baris yang memiliki nilai kosong pada kolom yang penting untuk model, seperti **Name**, **Genre**, **Platform**, dan **User_Score**. Data yang tidak lengkap dapat mengganggu perhitungan kesamaan antar game, sehingga baris-baris yang tidak memiliki informasi ini dihapus.
 
-3. **Merge Rating dan Metadata Film**  
-   - **Teknik**: Join tabel `ratings` dan `movies` pada kolom `movieId`  
-   - **Langkah**:
-     ```python
-     data = pd.merge(ratings, movies, on='movieId', how='left')
-     ```
+```python
+# Menghapus baris yang memiliki nilai kosong pada kolom penting
+df_cleaned = df.dropna(subset=['Name', 'Genre', 'Platform', 'User_Score', 'Publisher'])
+```
+### 2. Mengatasi Nilai NaN pada Kolom Critic_Score dan User_Score
 
-4. **Ekstraksi Tahun Rilis**  
-   - **Teknik**: Menggunakan regular expression untuk mengambil tahun dari kolom `title`  
-   - **Langkah**:
-     ```python
-     data['year'] = data['title'].str.extract(r'\((\d{4})\)').astype(float)
-     ```
+Beberapa kolom seperti Critic_Score dan User_Score mengandung nilai NaN. Untuk data numerik ini, kami memutuskan untuk mengisi nilai kosong dengan mean atau median skor dari kolom tersebut, karena nilai-nilai ini dapat memberi gambaran yang lebih representatif daripada menghapus seluruh baris.
 
-5. **One-Hot Encoding Genre**  
-   - **Teknik**:  
-     1. Memisah string `genres` (`str.split('|')`)  
-     2. `explode()` untuk satu baris per genre  
-     3. `pd.get_dummies()` untuk membuat kolom genre biner  
-     4. `groupby('movieId').sum()` untuk mengembalikan satu baris per film  
-   - **Langkah**:
-     ```python
-     movies_exp = movies.copy()
-     movies_exp['genres'] = movies_exp['genres'].str.split('|')
-     movies_exp = movies_exp.explode('genres')
-     genre_dummies = pd.get_dummies(movies_exp['genres'])
-     movies_onehot = (movies_exp[['movieId']]
-                      .join(genre_dummies)
-                      .groupby('movieId')
-                      .sum()
-                      .reset_index())
-     ```
+```python
+# Mengisi nilai kosong di 'Critic_Score' dengan nilai rata-rata
+df_cleaned['Critic_Score'].fillna(df_cleaned['Critic_Score'].mean(), inplace=True)
 
-6. **Finalisasi DataFrame Fitur**  
-   - **Teknik**: Menggabungkan DataFrame `movies_onehot` dengan `movies` untuk menghasilkan `movies_feat` yang berisi semua fitur konten  
-   - **Langkah**:
-     ```python
-     movies_feat = movies.merge(movies_onehot, on='movieId', how='left').fillna(0)
-     ```
+# Mengisi nilai kosong di 'User_Score' dengan nilai rata-rata
+df_cleaned['User_Score'].fillna(df_cleaned['User_Score'].mean(), inplace=True)
+```
+### 3. Menggabungkan Fitur Teks (Genre, Platform, Publisher)
 
-Setelah tahapan ini, dataset siap untuk **Feature Extraction** (TF-IDF pada judul) dan perhitungan similarity pada tahap modeling.
+Untuk keperluan sistem rekomendasi berbasis konten, kami menggabungkan kolom Genre, Platform, dan Publisher menjadi satu kolom content. Hal ini dilakukan untuk menyederhanakan representasi fitur yang akan digunakan dalam perhitungan kesamaan antar game.
+
+```python
+# Menggabungkan kolom Genre, Platform, dan Publisher untuk membuat fitur 'content'
+df_cleaned['content'] = df_cleaned['Genre'] + ' ' + df_cleaned['Platform'] + ' ' + df_cleaned['Publisher']
+```
+### 4. Menghapus Duplikasi Game
+Dataset ini mungkin mengandung duplikasi, misalnya game yang sama yang tercatat lebih dari sekali. Oleh karena itu, kami memeriksa dan menghapus duplikasi berdasarkan kolom Name.
+
+```python
+# Menghapus duplikasi berdasarkan kolom 'Name'
+df_cleaned = df_cleaned.drop_duplicates(subset=['Name'])
+```
+### 5. Pengolahan Teks dengan TF-IDF Vectorizer
+Selanjutnya, kami mengubah teks yang terdapat pada kolom content (gabungan dari Genre, Platform, dan Publisher) menjadi representasi numerik menggunakan TF-IDF Vectorizer. Ini memungkinkan kami untuk mengukur kesamaan antar game berdasarkan fitur teks.
+
+```python
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Membuat TF-IDF Matrix dari kolom 'content'
+tfidf = TfidfVectorizer(stop_words='english')
+tfidf_matrix = tfidf.fit_transform(df_cleaned['content'])
+```
 
 ## Modeling
 
-### Modeling
+### 1. Pendekatan Model
 
-1. **Feature Construction**  
-   - **Title**: Menggunakan TF–IDF (`TfidfVectorizer(stop_words='english')`) pada kolom `title` untuk menangkap kata-kata penting di judul film.  
-   - **Genre**: One-hot encoding pada setiap genre film (hasil dari `pd.get_dummies` + `groupby('movieId').sum()`).  
-   - **Content Matrix**: Menggabungkan TF–IDF matrix (n_items × n_terms) dan genre one-hot matrix (n_items × n_genres) menjadi sparse matrix (n_items × (n_terms + n_genres)).
+#### 1.1. Pemilihan Model: Sistem Rekomendasi Berbasis Konten
 
-2. **Item–Item Similarity**  
-   - Hitung _cosine similarity_ pada content matrix:
-     ```python
-     from sklearn.metrics.pairwise import cosine_similarity
-     item_sim = cosine_similarity(content_matrix, dense_output=False)
-     ```
+Untuk menyelesaikan masalah yang dihadapi pengguna dalam mencari game yang sesuai dengan preferensi mereka, kami mengembangkan sistem rekomendasi berbasis konten yang menggunakan informasi tentang **genre**, **platform**, dan **publisher** game. Sistem ini mengandalkan **Cosine Similarity** untuk mengukur kesamaan antar game berdasarkan fitur teks yang telah digabungkan.
 
-3. **User Profiling**  
-   - Untuk setiap `userId`, ambil film dengan `rating >= 4` lalu rata-rata vektor content mereka:
-     ```python
-     profile = content_matrix[idxs_of_liked_items].mean(axis=0)
-     ```
+Sistem rekomendasi berbasis konten ini memanfaatkan teknik **TF-IDF Vectorizer** untuk mengubah teks (gabungan dari genre, platform, dan publisher) menjadi representasi numerik. Selanjutnya, kami menggunakan **Cosine Similarity** untuk menghitung seberapa mirip suatu game dengan game lainnya.
 
-4. **Personalized Recommendation**  
-   - Hitung similarity antara user profile dan semua item, lalu sortir dan eksklusi film yang sudah dirating:
-     ```python
-     sims = cosine_similarity(profile, content_matrix).ravel()
-     # rekomendasi = top-N film dengan skor tertinggi yang belum dirating user
-     ```
+#### 1.2. Langkah-Langkah Pembangunan Model
+1. **Data Preprocessing**:
+   - Menghapus baris dengan nilai kosong pada kolom penting.
+   - Mengisi nilai `NaN` dengan rata-rata pada kolom `Critic_Score` dan `User_Score`.
+   - Menggabungkan kolom **Genre**, **Platform**, dan **Publisher** menjadi satu kolom **content**.
+   
+2. **Matriks TF-IDF**:
+   - Menggunakan **TF-IDF Vectorizer** untuk mengubah teks dari kolom **content** menjadi fitur numerik.
+   
+3. **Menghitung Cosine Similarity**:
+   - Menggunakan **Cosine Similarity** untuk mengukur kesamaan antara game berdasarkan fitur yang ada.
 
----
+4. **Pemberian Rekomendasi**:
+   - Fungsi `get_top_n_recommendations` digunakan untuk memberikan rekomendasi game yang paling mirip dengan game yang dipilih oleh pengguna, berdasarkan hasil perhitungan cosine similarity.
 
-### Result: Top-5 Recommendations for User 1
+### 2. Hasil Model
 
-Berikut contoh output Top-5 rekomendasi untuk **userId = 1**, berdasarkan profil film yang pernah mereka beri rating ≥ 4:
+Setelah membangun model rekomendasi, kami menguji sistem dengan memberikan rekomendasi untuk beberapa game populer dalam dataset. Berikut adalah contoh **Top-N Recommendation** untuk game **"Wii Sports"** yang dihasilkan oleh sistem rekomendasi berbasis konten.
 
-| Rank | Movie Title                        | Similarity Score |
-| ---- | ---------------------------------- | ---------------- |
-| 1    | Babe (1995)                        | 0.842            |
-| 2    | Balto (1995)                       | 0.823            |
-| 3    | Pocahontas (1995)                  | 0.801            |
-| 4    | Batman Forever (1995)              | 0.784            |
-| 5    | Jungle Book, The (1967)            | 0.765            |
+#### 2.1. Contoh Top-10 Rekomendasi untuk Game "Wii Sports"
 
 ```python
-# Contoh kode untuk menampilkan hasil di atas:
-recs = recommend_for_user(1, ratings, content_matrix, movieid_to_idx, movies_feat, top_n=5)
-for rank, (mid, title, score) in enumerate(recs, start=1):
-    print(f"{rank}. {title:<35}  (score: {score:.3f})")
+# Mengambil 10 rekomendasi teratas untuk game "Wii Sports"
+top_n_recommended_games = get_top_n_recommendations('Wii Sports', n=10)
+
+# Menampilkan rekomendasi
+print("Top 10 Rekomendasi untuk game 'Wii Sports':")
+print(top_n_recommended_games)
 ```
 
 ## Evaluation
 
-### Metrik Evaluasi
+# Evaluation
 
-1. **Precision@K**  
-   Proporsi rekomendasi dalam top-K yang benar-benar relevan (rating ≥ 4 di test set).  
-   \[
-   \text{Precision@K} = \frac{\lvert \text{Rekomendasi@K} \cap \text{Relevant Items} \rvert}{K}
-   \]
+### 1. Metrik Evaluasi yang Digunakan
 
-2. **Recall@K**  
-   Proporsi item relevan di test set yang berhasil direkomendasikan dalam top-K.  
-   \[
-   \text{Recall@K} = \frac{\lvert \text{Rekomendasi@K} \cap \text{Relevant Items} \rvert}{\lvert \text{Relevant Items} \rvert}
-   \]
+Untuk mengevaluasi kinerja sistem rekomendasi berbasis konten, kami menggunakan dua metrik evaluasi utama, yaitu **Precision at K** dan **Recall at K**. Metrik ini digunakan untuk menilai seberapa baik rekomendasi yang diberikan oleh model relevan dengan preferensi pengguna atau game yang diinginkan.
 
-### Prosedur Evaluasi
+### 1.1. Precision at K
 
-- **Train/Test Split**  
-  Setiap user dipisah menjadi:  
-  - *Train* = semua rating kecuali 1 rating terakhir (berdasarkan timestamp).  
-  - *Test*  = rating terakhir (ground truth untuk evaluasi).  
+**Precision at K** mengukur seberapa banyak dari rekomendasi yang diberikan yang benar-benar relevan bagi pengguna. Ini dihitung dengan membagi jumlah rekomendasi relevan yang ditemukan dalam **Top K** rekomendasi dengan total jumlah rekomendasi yang diberikan (K).
 
-- **Threshold Relevansi**  
-  Rating ≥ 4 dianggap relevan (positif).
-
-- **Perhitungan**  
-  Untuk tiap user:  
-  1. Bangun profil user dari data *train*.  
-  2. Hitung rekomendasi top-10 (`K=10`).  
-  3. Hitung Precision@10 dan Recall@10 berdasarkan *test*.
-
-- **Aggregate**  
-  Rata-rata Precision@10 dan Recall@10 di seluruh user.
-
-### Hasil Evaluasi
-
-| Metrik        | Nilai  |
-| ------------- | ------ |
-| Precision@10  | 0.123  |
-| Recall@10     | 0.087  |
-
-- **Interpretasi**:  
-  - *Precision@10 = 0.123* → Rata-rata 1.23 dari 10 rekomendasi benar-benar relevan dengan preferensi user.  
-  - *Recall@10 = 0.087*  → Sistem berhasil menangkap sekitar 8.7% dari semua film yang user sukai di test set.
-
-### Kesimpulan
-
-- Nilai Precision dan Recall yang masih relatif rendah menunjukkan bahwa **model content-based sederhana** ini butuh peningkatan, misalnya:  
-  - Menambah fitur (contoh: tag, deskripsi film)  
-  - Mengatur threshold rating (mis. ≥3)  
-  - Menggunakan metrik similarity atau weighting yang lebih kompleks  
-- Namun, model ini sudah memberikan dasar pipeline yang modular dan ringan untuk eksperimen lebih lanjut di Google Colab.
+Formula:
