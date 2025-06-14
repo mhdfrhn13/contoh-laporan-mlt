@@ -76,16 +76,69 @@ Data columns (total 7 columns):
  6   Skills              3522 non-null   object
 dtypes: object(7)
 ```
+### Struktur dan Tipe Data
+
+Langkah pertama adalah memuat data dan memeriksa informasi dasarnya menggunakan fungsi `df.info()`.
+
+Berdasarkan hasil analisis, diketahui bahwa:
+* Dataset terdiri dari **3.522 baris** data dan **7 kolom**.
+* Tidak ditemukan adanya nilai yang hilang (*missing values*) pada setiap kolom.
+* Seluruh 7 kolom memiliki tipe data `object`, yang menandakan bahwa kolom-kolom numerik seperti `Course Rating` perlu diubah tipenya pada tahap *Data Preparation*.
+
+### Statistik Deskriptif
+
+Untuk mendapatkan wawasan lebih lanjut, dilakukan analisis statistik deskriptif menggunakan fungsi `df.describe()`. Karena semua kolom bersifat kategorikal (tipe `object`), analisis ini memberikan informasi mengenai jumlah data, nilai unik, nilai yang paling sering muncul (*top*), dan frekuensinya (*freq*).
+
+Berikut adalah ringkasan statistik untuk beberapa kolom utama:
+
+| Atribut            | Jumlah Data | Nilai Unik | Nilai Paling Sering Muncul                                | Frekuensi |
+| :----------------- | :---------: | :--------: | :-------------------------------------------------------- | :-------: |
+| **Course Name** | 3.522       | 3.416      | `Google Cloud Platform Fundamentals: Core Infrastructure` | 8         |
+| **University** | 3.522       | 184        | `Coursera Project Network`                                | 562       |
+| **Difficulty Level**| 3.522       | 5          | `Beginner`                                                | 1.444     |
+| **Course Rating** | 3.522       | 31         | `4.7`                                                     | 740       |
+
+Dari tabel di atas, dapat disimpulkan beberapa poin penting:
+* Terdapat **3.416** nama kursus yang unik dari total 3.522 data, yang menunjukkan adanya beberapa kursus duplikat.
+* **Coursera Project Network** adalah penyedia kursus terbanyak dalam dataset ini dengan total **562** kursus.
+* Sebagian besar kursus ditujukan untuk level **Beginner**, yaitu sebanyak **1.444** kursus.
+* Rating yang paling umum diberikan adalah **4.7**, yang muncul pada **740** kursus.
+
 ## Data Preparation
-Berikut adalah tahapan-tahapan yang dilakukan:
 
-1. Mengatasi missing value: Melakukan penanganan terhadap nilai yang hilang pada dataset, seperti menghapus baris atau mengisi nilai yang hilang dengan metode tertentu, seperti mean atau median.
-2. Mengambil kolom yang diperlukan dan merubah nama kolom: Memilih kolom-kolom yang relevan untuk analisis dan memberikan nama baru jika diperlukan.
-3. Exclude rating yang ingin dihapus dari dataset: Menghapus data dengan rating tertentu yang ingin dikecualikan dari analisis.
-4. Reset index dataframe untuk menghindari error: Mereset indeks dataframe setelah melakukan operasi penghapusan atau pemrosesan data agar indeks kembali terurut secara berurutan.
-5. Convert "rating" column to int64 data type: Mengubah tipe data kolom "rating" menjadi tipe data int64 untuk mempermudah analisis numerik.
-6. Mendapatkan list unik kolom kursus dan keahlian: Mengidentifikasi dan mendapatkan daftar unik kolom "courseName" dan "skills" dalam dataset.
+Tahap *Data Preparation* adalah proses transformasi data mentah menjadi format yang bersih, terstruktur, dan siap untuk digunakan dalam pemodelan sistem rekomendasi. Berdasarkan hasil dari tahap *Data Understanding*, beberapa langkah persiapan perlu dilakukan.
 
+### Pemilihan Fitur
+Untuk membangun model *content-based filtering*, tidak semua kolom dari dataset asli diperlukan. Hanya fitur-fitur yang paling relevan dengan konten kursus yang dipilih. Kolom-kolom yang dipilih adalah:
+* `Course Name`
+* `Course Rating`
+* `Course Description`
+* `Skills`
+
+Kolom-kolom ini kemudian diganti namanya agar lebih mudah diakses dalam kode, seperti `Course Name` menjadi `courseName` dan `Course Rating` menjadi `rating`.
+
+### Penanganan Data Rating
+Dari analisis sebelumnya, diketahui bahwa kolom `rating` masih bertipe `object` dan mengandung nilai non-numerik. Langkah-langkah berikut dilakukan untuk membersihkannya:
+1.  **Menghapus Nilai Tidak Sesuai**: Baris data yang memiliki nilai `Not Calibrated` pada kolom `rating` diidentifikasi dan dihapus dari dataset.
+2.  **Konversi Tipe Data**: Setelah dibersihkan, tipe data kolom `rating` diubah dari `object` menjadi tipe numerik (float) menggunakan fungsi `pd.to_numeric`. Hal ini penting agar kolom `rating` dapat digunakan dalam operasi matematis dan evaluasi di kemudian hari.
+
+Setelah proses pembersihan ini, jumlah data yang siap untuk diolah menjadi **3.740 baris**.
+
+### Hasil Akhir Data Preparation
+Setelah melalui semua tahapan di atas, dataset `data_courses` kini telah bersih dan siap untuk tahap pemodelan. Kolom `courseName` dan `skills` akan menjadi dasar utama dalam membangun matriks kemiripan untuk sistem rekomendasi berbasis konten.
+
+### Ekstraksi Fitur dengan TF-IDF
+
+Langkah pertama dalam pemodelan adalah mengubah data teks (judul kursus) menjadi representasi numerik yang dapat diolah oleh mesin. Untuk tujuan ini, teknik **TF-IDF (Term Frequency-Inverse Document Frequency)** digunakan. TF-IDF bekerja dengan mengukur seberapa penting sebuah kata dalam sebuah dokumen (dalam hal ini, judul kursus) relatif terhadap keseluruhan koleksi dokumen (seluruh judul kursus).
+
+- **Term Frequency (TF)**: Menghitung frekuensi kemunculan sebuah kata dalam satu judul kursus.
+- **Inverse Document Frequency (IDF)**: Mengukur seberapa unik atau langka sebuah kata di seluruh dataset. Kata-kata umum seperti "dan" atau "pengenalan" akan memiliki skor IDF yang rendah, sementara kata-kata yang lebih spesifik akan memiliki skor yang lebih tinggi.
+
+Proses ini dilakukan pada kolom `courseName` dan menghasilkan sebuah matriks TF-IDF dengan dimensi **(3740, 3628)**. Ini berarti model merepresentasikan 3.740 kursus dengan 3.628 fitur kata unik.
+
+### Perhitungan Kemiripan Kursus
+
+Setelah setiap kursus direpresentasikan sebagai vektor numerik TF-IDF, langkah selanjutnya adalah menghitung tingkat kemiripan antara setiap pasang kursus.
 
 ## Modeling
 
@@ -119,42 +172,50 @@ Selama pendekatan ini, proses modeling dilakukan berdasar urutan sebagai berikut
 
 3. *Euclidean Distance*: Selain *Cosine Similarity*, tahap Content-Based Filtering juga dapat menggunakan *Euclidean Distance* untuk mengukur jarak antara vektor fitur kursus. *Euclidean Distance* menghitung jarak antara dua titik dalam ruang Euclidean. Dalam konteks *Content-Based Filtering*, *Euclidean Distance* digunakan untuk mengukur jarak antara vektor fitur kursus. Semakin kecil nilai *Euclidean Distance*, semakin mirip kedua kursus dalam hal fitur-fitur yang diamati.
 
+### Hasil Rekomendasi Model
+Sebagai contoh, model diuji dengan memberikan input kursus **'Software Security'**. Dengan menggunakan *Cosine Similarity*, model berhasil memberikan 10 rekomendasi kursus teratas yang relevan.
+
+Berikut adalah 5 dari 10 rekomendasi teratas yang dihasilkan:
+
+| courseName | rating (Similarity Score) |
+| :--- | :--- |
+| Cloud Systems Software | 1.000000 |
+| Software Architecture | 0.481082 |
+| Agile Software Development | 0.475195 |
+| Introduction to Software Testing | 0.427880 |
+| Software Design as an Element of the Software Development Lifecycle | 0.422111 |
+
+Hasil ini menunjukkan bahwa model mampu menemukan kursus lain yang terkait dengan "Software", "Security", dan "Development", yang membuktikan bahwa pendekatan *Content-Based Filtering* ini bekerja dengan baik sesuai dengan data yang ada.
+
 ## Evaluation
 
-# Evaluation
+Tahap evaluasi bertujuan untuk mengukur performa dan kualitas dari model sistem rekomendasi yang telah dibangun. Pengujian ini penting untuk memastikan bahwa rekomendasi yang diberikan tidak hanya mirip berdasarkan judul, tetapi juga relevan dari segi konten atau keahlian yang ditawarkan.
 
-## Metrik Evaluasi yang Digunakan
+### 5.1. Metrik Evaluasi: Precision@k
 
-Untuk mengevaluasi kinerja sistem rekomendasi yang dikembangkan dalam proyek ini, kami menggunakan **Precision** sebagai metrik utama. Precision adalah salah satu metrik yang paling sering digunakan dalam sistem rekomendasi untuk mengukur seberapa relevan rekomendasi yang diberikan oleh sistem.
+Metrik yang digunakan untuk evaluasi adalah **Precision@k**. Metrik ini mengukur proporsi item yang relevan dari total `k` item teratas yang direkomendasikan. Metrik ini sangat cocok untuk sistem rekomendasi karena pengguna umumnya hanya memperhatikan beberapa rekomendasi teratas.
 
-### Definisi Precision
-Precision dihitung dengan rumus:
-```sh
-Precision = TP / (TP + FP)
-```
-Dimana:
-- **Jumlah rekomendasi relevan** adalah jumlah kursus yang relevan dan sesuai dengan preferensi pengguna dari semua kursus yang direkomendasikan.
-- **Jumlah rekomendasi yang diberikan** adalah total kursus yang direkomendasikan oleh sistem.
+Rumus Precision@k adalah:
 
-Precision memberikan gambaran tentang kualitas rekomendasi yang diberikan oleh sistem, dengan nilai lebih tinggi menunjukkan bahwa sistem memberikan lebih banyak rekomendasi yang sesuai dengan kebutuhan atau minat pengguna.
+$$ \text{Precision@k} = \frac{\text{Jumlah Rekomendasi Relevan dalam Top-k}}{k} $$
 
-## Hasil Proyek Berdasarkan Metrik Evaluasi
+Dalam proyek ini, nilai `k` yang digunakan adalah 10, sehingga kita mengukur **Precision@10**.
 
-Setelah melakukan evaluasi sistem rekomendasi dengan menggunakan metrik **Precision**, hasil yang didapatkan adalah **precision = 1**, yang menunjukkan bahwa **100%** dari kursus yang direkomendasikan oleh sistem adalah kursus yang relevan atau sesuai dengan kriteria yang telah ditentukan.
+### 5.2. Definisi Relevansi
 
-### Penjelasan Hasil:
-- **Precision 1** menunjukkan bahwa **semua kursus yang direkomendasikan oleh sistem relevan** dengan preferensi atau kebutuhan pengguna. Dalam hal ini, setiap kursus yang direkomendasikan sesuai dengan kriteria relevansi yang telah ditetapkan, seperti kursus dengan rating tinggi atau kursus yang telah dipilih oleh pengguna sebelumnya.
-  
-  Sebagai contoh, jika sistem merekomendasikan 5 kursus dan semua 5 kursus tersebut berada dalam daftar **relevant_courses**, maka precision akan menjadi 1. 
+Karena tidak ada data umpan balik eksplisit dari pengguna, relevansi didefinisikan berdasarkan fitur yang tersedia dalam dataset. Model ini dibangun berdasarkan kemiripan `courseName`. Oleh karena itu, kolom `skills` digunakan sebagai "kunci jawaban" atau *ground truth* untuk menentukan apakah sebuah rekomendasi relevan.
 
-### Implikasi Hasil:
-- **Precision yang tinggi (1)** menunjukkan bahwa sistem sangat efektif dalam memilih kursus yang relevan, artinya pengguna hanya menerima rekomendasi yang sesuai dengan minat atau preferensi mereka.
-- Meskipun hasil ini sangat positif, penting untuk dicatat bahwa **precision yang tinggi tidak menjamin bahwa sistem akan memberikan rekomendasi yang sangat beragam**. Sistem mungkin tidak merekomendasikan kursus yang bisa saja relevan namun tidak tercakup dalam daftar rekomendasi.
-  
-### Langkah Perbaikan:
-Walaupun precision sebesar 1 menunjukkan kinerja yang sangat baik dalam memberikan rekomendasi yang relevan, untuk meningkatkan sistem lebih lanjut, beberapa langkah yang dapat diambil adalah:
-1. **Meningkatkan Keragaman Rekomendasi**: Sistem dapat diperluas untuk mencakup kursus yang relevan tetapi kurang sering direkomendasikan, untuk menghindari "overfitting" pada kursus yang sangat populer atau sudah dikenal oleh pengguna.
-2. **Evaluasi dengan Metrik Lain**: Menggunakan metrik lain seperti **Recall** atau **F1-score** untuk memastikan bahwa tidak hanya kursus relevan yang diberikan, tetapi juga untuk mengukur seberapa banyak kursus relevan yang berhasil ditemukan oleh sistem.
-3. **Fine-Tuning Model**: Menambahkan lebih banyak fitur seperti deskripsi kursus, keterampilan yang diajarkan, atau sejarah pembelajaran pengguna untuk meningkatkan kualitas rekomendasi lebih lanjut.
+Definisi relevansi yang digunakan adalah sebagai berikut:
+> Sebuah kursus yang direkomendasikan dianggap **"relevan"** jika kursus tersebut memiliki **setidaknya satu skill yang sama** dengan kursus input yang dicari.
 
-Secara keseluruhan, **precision 1** menunjukkan bahwa sistem memberikan rekomendasi yang sangat tepat dan sesuai dengan kriteria relevansi yang telah ditetapkan. Namun, meskipun hasil ini sangat baik, masih ada ruang untuk memperbaiki sistem dalam hal keragaman rekomendasi dan seberapa banyak kursus relevan yang bisa ditemukan dan direkomendasikan oleh sistem.
+Sebuah fungsi kustom bernama `evaluate_model_precision` dibuat untuk mengotomatiskan proses ini, dengan cara membandingkan set *skills* dari kursus input dengan setiap set *skills* dari kursus yang direkomendasikan.
+
+### 5.3. Hasil dan Analisis
+
+Model dievaluasi dengan menggunakan kursus **'Software Security'** sebagai input untuk mendapatkan 10 rekomendasi teratas dari model *Cosine Similarity*.
+
+Setelah rekomendasi didapatkan, skor presisi dihitung menggunakan fungsi `evaluate_model_precision`. Hasil dari evaluasi tersebut adalah sebagai berikut:
+
+- **Precision@10 Score: 1.00**
+
+Skor presisi 1.00 menunjukkan bahwa **100%** dari 10 kursus yang direkomendasikan untuk 'Software Security' memiliki setidaknya satu skill yang tumpang tindih dengan kursus input. Berdasarkan metrik dan definisi relevansi yang telah ditetapkan, hasil ini menandakan bahwa model memiliki performa yang sangat baik dalam memberikan rekomendasi yang relevan secara konten.
