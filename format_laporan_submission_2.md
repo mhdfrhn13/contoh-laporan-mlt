@@ -106,26 +106,32 @@ Dari tabel di atas, dapat disimpulkan beberapa poin penting:
 
 ## Data Preparation
 
-Tahap *Data Preparation* adalah proses transformasi data mentah menjadi format yang bersih, terstruktur, dan siap untuk digunakan dalam pemodelan sistem rekomendasi. Berdasarkan hasil dari tahap *Data Understanding*, beberapa langkah persiapan perlu dilakukan.
+Tahap *Data Preparation* adalah proses transformasi data mentah menjadi format yang bersih, terstruktur, dan siap untuk digunakan dalam pemodelan sistem rekomendasi. Berdasarkan hasil dari tahap *Data Understanding*, beberapa langkah pengolahan data dilakukan secara berurutan.
 
-### Pemilihan Fitur
-Untuk membangun model *content-based filtering*, tidak semua kolom dari dataset asli diperlukan. Hanya fitur-fitur yang paling relevan dengan konten kursus yang dipilih. Kolom-kolom yang dipilih adalah:
-* `Course Name`
-* `Course Rating`
-* `Course Description`
-* `Skills`
+Proses persiapan data yang dilakukan adalah sebagai berikut:
 
-Kolom-kolom ini kemudian diganti namanya agar lebih mudah diakses dalam kode, seperti `Course Name` menjadi `courseName` dan `Course Rating` menjadi `rating`.
+1.  **Pengecekan Nilai Hilang (*Missing Value Check*)**
+    Langkah pertama adalah memastikan tidak ada data yang hilang dalam dataset. Berdasarkan hasil pengecekan menggunakan fungsi `df.isnull().sum()`, dikonfirmasi bahwa tidak ada nilai yang hilang di setiap kolom.
 
-### Penanganan Data Rating
-Dari analisis sebelumnya, diketahui bahwa kolom `rating` masih bertipe `object` dan mengandung nilai non-numerik. Langkah-langkah berikut dilakukan untuk membersihkannya:
-1.  **Menghapus Nilai Tidak Sesuai**: Baris data yang memiliki nilai `Not Calibrated` pada kolom `rating` diidentifikasi dan dihapus dari dataset.
-2.  **Konversi Tipe Data**: Setelah dibersihkan, tipe data kolom `rating` diubah dari `object` menjadi tipe numerik (float) menggunakan fungsi `pd.to_numeric`. Hal ini penting agar kolom `rating` dapat digunakan dalam operasi matematis dan evaluasi di kemudian hari.
+2.  **Pemilihan Fitur (*Feature Selection*)**
+    Untuk membangun model *content-based filtering*, tidak semua kolom dari dataset asli diperlukan. Hanya fitur-fitur yang paling relevan dengan konten kursus yang dipilih, yaitu `Course Name`, `Course Rating`, `Course Description`, dan `Skills`. Kolom-kolom ini kemudian disimpan dalam sebuah DataFrame baru bernama `data_courses`.
 
-Setelah proses pembersihan ini, jumlah data yang siap untuk diolah menjadi **3.740 baris**.
+3.  **Penggantian Nama Kolom (*Column Renaming*)**
+    Untuk kemudahan akses dan konsistensi dalam kode, nama kolom diubah menjadi format yang lebih singkat. Sebagai contoh, `Course Name` diubah menjadi `courseName` dan `Course Rating` menjadi `rating`.
 
-### Hasil Akhir Data Preparation
-Setelah melalui semua tahapan di atas, dataset `data_courses` kini telah bersih dan siap untuk tahap pemodelan. Kolom `courseName` dan `skills` akan menjadi dasar utama dalam membangun matriks kemiripan untuk sistem rekomendasi berbasis konten.
+4.  **Penggabungan Data (*Data Merging*)**
+    Sesuai dengan alur notebook, sebuah operasi `merge` dilakukan pada DataFrame `data_courses` dengan subset dari dirinya sendiri (`data_courses[['courseName', 'description']]`) berdasarkan kolom `courseName`. Langkah ini menghasilkan duplikasi pada kolom deskripsi, yang kemudian menjadi `description_x` dan `description_y`.
+
+5.  **Pembersihan Data Rating (*Rating Data Cleaning*)**
+    Kolom `rating` teridentifikasi memiliki tipe data `object` dan mengandung nilai non-numerik seperti `'Not Calibrated'`. Baris data yang mengandung nilai tidak valid ini dihapus dari dataset untuk menjaga kualitas data.
+
+6.  **Konversi Tipe Data (*Data Type Conversion*)**
+    Setelah dibersihkan, tipe data kolom `rating` diubah dari `object` menjadi tipe data numerik (float) menggunakan fungsi `pd.to_numeric`. Langkah ini krusial agar nilai rating dapat digunakan dalam perhitungan matematis.
+
+7.  **Reset Indeks (*Index Resetting*)**
+    Setelah menghapus beberapa baris pada langkah sebelumnya, indeks DataFrame diatur ulang menggunakan `reset_index(drop=True)` untuk memastikan urutan indeks kembali normal dan menghindari potensi kesalahan pada proses selanjutnya.
+
+Setelah melalui semua tahapan di atas, dataset `data_courses` kini berisi **3.740 baris** data yang bersih dan siap untuk digunakan pada tahap pemodelan.
 
 ### Ekstraksi Fitur dengan TF-IDF
 
@@ -166,11 +172,9 @@ Teknik Perhitungan Similarity:
 ### Tahapan yang dilakukan dengan pendekatan *Content-Based Filtering*
 Selama pendekatan ini, proses modeling dilakukan berdasar urutan sebagai berikut ini:
 
-1. *TF-IDF Vectorizer*: Tahap ini melibatkan penggunaan TF-IDF (Term Frequency-Inverse Document Frequency) Vectorizer untuk mengubah teks pada deskripsi kursus menjadi representasi numerik. TF-IDF mengukur pentingnya suatu kata dalam dokumen berdasarkan frekuensi kemunculan kata tersebut dalam dokumen dan inversi frekuensi kemunculan kata tersebut dalam seluruh koleksi dokumen. *TF-IDF Vectorizer* menghasilkan vektor fitur yang merepresentasikan konten kursus.
+1. *Cosine Similarity*: Setelah mendapatkan vektor fitur menggunakan *TF-IDF Vectorizer*, tahap selanjutnya adalah menghitung kesamaan antara kursus menggunakan metode *Cosine Similarity*. *Cosine Similarity* mengukur kesamaan arah antara dua vektor dalam ruang vektor. Pada konteks Content-Based Filtering, *Cosine Similarity* digunakan untuk mengukur kesamaan antara vektor fitur kursus berdasarkan deskripsi, topik, atau keterampilan yang terkait. Semakin tinggi nilai *Cosine Similarity*, semakin mirip kedua kursus dalam hal fitur-fitur yang diamati.
 
-2. *Cosine Similarity*: Setelah mendapatkan vektor fitur menggunakan *TF-IDF Vectorizer*, tahap selanjutnya adalah menghitung kesamaan antara kursus menggunakan metode *Cosine Similarity*. *Cosine Similarity* mengukur kesamaan arah antara dua vektor dalam ruang vektor. Pada konteks Content-Based Filtering, *Cosine Similarity* digunakan untuk mengukur kesamaan antara vektor fitur kursus berdasarkan deskripsi, topik, atau keterampilan yang terkait. Semakin tinggi nilai *Cosine Similarity*, semakin mirip kedua kursus dalam hal fitur-fitur yang diamati.
-
-3. *Euclidean Distance*: Selain *Cosine Similarity*, tahap Content-Based Filtering juga dapat menggunakan *Euclidean Distance* untuk mengukur jarak antara vektor fitur kursus. *Euclidean Distance* menghitung jarak antara dua titik dalam ruang Euclidean. Dalam konteks *Content-Based Filtering*, *Euclidean Distance* digunakan untuk mengukur jarak antara vektor fitur kursus. Semakin kecil nilai *Euclidean Distance*, semakin mirip kedua kursus dalam hal fitur-fitur yang diamati.
+2. *Euclidean Distance*: Selain *Cosine Similarity*, tahap Content-Based Filtering juga dapat menggunakan *Euclidean Distance* untuk mengukur jarak antara vektor fitur kursus. *Euclidean Distance* menghitung jarak antara dua titik dalam ruang Euclidean. Dalam konteks *Content-Based Filtering*, *Euclidean Distance* digunakan untuk mengukur jarak antara vektor fitur kursus. Semakin kecil nilai *Euclidean Distance*, semakin mirip kedua kursus dalam hal fitur-fitur yang diamati.
 
 ### Hasil Rekomendasi Model
 Sebagai contoh, model diuji dengan memberikan input kursus **'Software Security'**. Dengan menggunakan *Cosine Similarity*, model berhasil memberikan 10 rekomendasi kursus teratas yang relevan.
