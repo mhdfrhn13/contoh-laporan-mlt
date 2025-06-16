@@ -62,9 +62,11 @@ Dataset ini berisi informasi transaksi penjualan ritel.
   - **float64** (3 kolom): untuk nilai numerik dengan desimal.
   - **object** (5 kolom): untuk nilai teks atau kategori.
 - **Missing Values (Nilai Hilang)**:
-  - Sebelum pembersihan: Kolom 'Quantity', 'Country', dan 'TotalSales' masing-masing memiliki 1 nilai null.
+  - Sebelum pembersihan: Kolom 'CustomerNO' terdapat 55 missing values 
   - Setelah pembersihan: Tidak ada nilai null di kolom manapun.
-- **Duplikasi Data**: Tidak ada baris duplikat setelah tahap pembersihan data.
+- **Duplikasi Data**:
+  - Sebelum pembersihan: Terdapat 5200 duplicated data
+  - Setelah pembersihan: Tidak ada duplicated.
 
 ### Deskripsi Variabel (Fitur)
 Berikut adalah uraian dari setiap kolom (variabel/fitur) yang terdapat dalam dataset:
