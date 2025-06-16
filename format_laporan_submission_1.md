@@ -55,7 +55,7 @@ Tautan unduh data: https://www.kaggle.com/datasets/gabrielramos87/an-online-shop
 ### Informasi Umum Dataset
 Dataset ini berisi informasi transaksi penjualan ritel.
 
-- **Jumlah Baris (Observasi)**: Dataset asli memiliki 471.094 baris. Setelah pra-pemrosesan data (penghapusan baris dengan nilai null pada kolom 'Date' dan 'Country', serta penghapusan duplikat), jumlah baris menjadi 466.587.
+- **Jumlah Baris (Observasi)**: Dataset asli memiliki 536.350 baris. Setelah pra-pemrosesan data (penghapusan baris dengan nilai null pada kolom 'Date' dan 'Country', serta penghapusan duplikat), jumlah baris menjadi 531.150.
 - **Jumlah Kolom (Fitur)**: Dataset memiliki 9 kolom.
 - **Tipe Data**:
   - **datetime64[ns]** (1 kolom): untuk informasi waktu.
@@ -110,14 +110,6 @@ Berikut adalah uraian dari setiap kolom (variabel/fitur) yang terdapat dalam dat
    - **Tipe Data**: Object (String)
    - **Deskripsi**: Negara tempat transaksi dilakukan.  
    - **Contoh Nilai Unik**: 'United Kingdom', 'Norway', 'Belgium', 'Germany', 'France', dll.
-
-9. **TotalSales (Fitur yang Dibuat)**
-   - **Tipe Data**: float64
-   - **Deskripsi**: Total pendapatan dari satu baris item transaksi, dihitung sebagai Price * Quantity.  
-   - **Statistik**:
-     - Minimum: -501359.05
-     - Maksimum: 1002718.10
-     - Rata-rata: sekitar 114.42
 
 ## Data Preparation
 
@@ -185,17 +177,6 @@ Proses pemodelan dilakukan melalui beberapa tahapan kunci:
 - **Teknik**: Inferensi Model.
 - **Penerapan**: Setelah model dilatih, model digunakan untuk membuat prediksi pada set pengujian yang belum pernah dilihat sebelumnya (`y_pred = model.predict(X_test)`). Prediksi ini kemudian akan dibandingkan dengan nilai 'TotalSales' aktual dari set pengujian untuk mengevaluasi kinerja model.
 
-#### 5. Evaluasi Model
-
-- **Teknik**: Metrik Evaluasi Regresi.
-- **Penerapan**: Kinerja model dievaluasi menggunakan metrik berikut:
-  - **Mean Absolute Error (MAE)**: Mengukur rata-rata magnitudo kesalahan dalam satu set prediksi, tanpa mempertimbangkan arahnya. MAE yang lebih rendah menunjukkan akurasi yang lebih tinggi.  
-    - **Hasil**: 56.527
-  - **Mean Squared Error (MSE)**: Mengukur rata-rata dari kuadrat kesalahan. Memberikan bobot lebih besar pada kesalahan yang lebih besar. MSE yang lebih rendah menunjukkan akurasi yang lebih tinggi.  
-    - **Hasil**: 2,436,655.725
-  - **R-squared (R²)**: Atau koefisien determinasi, menunjukkan proporsi varians dalam variabel dependen yang dapat diprediksi dari variabel independen. Nilai berkisar dari 0 hingga 1, di mana 1 menunjukkan model yang sangat cocok.  
-    - **Hasil**: 0.777
-
 ## Evaluasi
 
 Bagian evaluasi ini menyajikan metrik-metrik yang digunakan untuk menilai kinerja model machine learning yang telah dibangun, serta menjelaskan interpretasi hasil proyek berdasarkan metrik tersebut. Pemilihan metrik evaluasi disesuaikan dengan konteks data numerik, pernyataan masalah mengenai volatilitas penjualan, dan tujuan untuk memprediksi total penjualan.
@@ -220,14 +201,14 @@ Untuk model regresi, seperti **Regresi Linier** yang digunakan dalam proyek ini,
 
 Setelah melatih model Regresi Linier dan membuat prediksi pada set pengujian, metrik evaluasi dihitung sebagai berikut:
 
-#### 1. **Mean Absolute Error (MAE)**: 56.527106606486925
-- **Interpretasi**: Secara rata-rata, prediksi 'TotalSales' oleh model kami meleset sekitar 56.53 unit mata uang dari nilai 'TotalSales' aktual. Ini memberikan gambaran langsung tentang rata-rata "kesalahan" model dalam prediksi penjualan.
+#### 1. **Mean Absolute Error (MAE)**: 23.357037869163406
+- **Interpretasi**: Secara rata-rata, prediksi 'TotalSales' oleh model kami meleset sekitar 23.35 unit mata uang dari nilai 'TotalSales' aktual. Ini memberikan gambaran langsung tentang rata-rata "kesalahan" model dalam prediksi penjualan.
 
-#### 2. **Mean Squared Error (MSE)**: 2436655.725152318
-- **Interpretasi**: Nilai MSE yang tinggi (sekitar 2.4 juta) menunjukkan bahwa ada beberapa kesalahan prediksi yang cukup besar (outlier) yang ditekankan oleh kuadratnya. Meskipun MAE terlihat moderat, MSE yang besar mengindikasikan bahwa model mungkin kurang baik dalam memprediksi beberapa transaksi dengan nilai penjualan yang sangat tinggi atau rendah. Ini adalah area yang perlu diperhatikan untuk perbaikan model lebih lanjut, mungkin dengan penanganan outlier yang lebih canggih atau fitur tambahan.
+#### 2. **Mean Squared Error (MSE)**: 114295.10845845914
+- **Interpretasi**: Nilai MSE yang tinggi (sekitar 1.1 juta) menunjukkan bahwa ada beberapa kesalahan prediksi yang cukup besar (outlier) yang ditekankan oleh kuadratnya. Meskipun MAE terlihat moderat, MSE yang besar mengindikasikan bahwa model mungkin kurang baik dalam memprediksi beberapa transaksi dengan nilai penjualan yang sangat tinggi atau rendah. Ini adalah area yang perlu diperhatikan untuk perbaikan model lebih lanjut, mungkin dengan penanganan outlier yang lebih canggih atau fitur tambahan.
 
-#### 3. **R-squared (R²)**: 0.7778156839784256
-- **Interpretasi**: Nilai R² sebesar 0.7778 (sekitar 77.78%) menunjukkan bahwa sekitar 77.78% dari variabilitas dalam 'TotalSales' dapat dijelaskan oleh fitur 'Price' dan 'Quantity' dalam model Regresi Linier kami. Ini adalah hasil yang cukup baik, menunjukkan bahwa model memiliki kekuatan prediktif yang substansial dan berhasil menangkap sebagian besar hubungan linier antara fitur yang dipilih dan total penjualan.
+#### 3. **R-squared (R²)**: 0.9834570093111258
+- **Interpretasi**: Nilai R² sebesar 0.983 (sekitar 98.34%) menunjukkan bahwa sekitar 98.34% dari variabilitas dalam 'TotalSales' dapat dijelaskan oleh fitur 'Price' dan 'Quantity' dalam model Regresi Linier kami. Ini adalah hasil yang cukup baik, menunjukkan bahwa model memiliki kekuatan prediktif yang substansial dan berhasil menangkap sebagian besar hubungan linier antara fitur yang dipilih dan total penjualan.
 
 ### Kesimpulan
 
