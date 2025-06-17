@@ -61,6 +61,16 @@ Berisi informasi detail mengenai setiap film. Berdasarkan proses pivoting data, 
 #### rating.csv
 Berisi catatan peringkat yang diberikan oleh pengguna. Terdapat **610 pengguna unik** yang telah memberikan peringkat dalam dataset ini.
 
+### Informasi Dataset Sebelum Penggabungan
+
+#### movies DataFrame
+- **Total Baris:** 9,742  
+- **Total Kolom:** 3  
+
+#### ratings DataFrame
+- **Total Baris:** 100,836  
+- **Total Kolom:** 4  
+
 ### Kondisi Data
 - Semua kolom dalam dataset tidak memiliki nilai yang hilang, yang berarti bahwa setiap entri memiliki nilai yang lengkap.
 - Kolom-kolom dalam dataset terdiri dari tipe data numerik dan objek, yaitu:
