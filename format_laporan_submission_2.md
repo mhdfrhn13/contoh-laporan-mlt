@@ -62,8 +62,22 @@ Berisi informasi detail mengenai setiap film. Berdasarkan proses pivoting data, 
 Berisi catatan peringkat yang diberikan oleh pengguna. Terdapat **610 pengguna unik** yang telah memberikan peringkat dalam dataset ini.
 
 ### Kondisi Data
+- Semua kolom dalam dataset tidak memiliki nilai yang hilang, yang berarti bahwa setiap entri memiliki nilai yang lengkap.
+- Kolom-kolom dalam dataset terdiri dari tipe data numerik dan objek, yaitu:
+  - `userId` (int64): ID unik untuk setiap pengguna.
+  - `movieId` (int64): ID unik untuk setiap film.
+  - `rating` (float64): Rating yang diberikan oleh pengguna terhadap film.
+  - `timestamp` (int64): Waktu saat rating diberikan.
+  - `title` (object): Judul film.
+  - `genres` (object): Genre-genre yang terkait dengan film.
 
-Kondisi data secara umum cukup bersih dan terstruktur. Namun, karakteristik paling penting dari dataset ini adalah **kelangkaan (sparsity)**. Setelah data diubah menjadi matriks Pengguna-Film, sebagian besar selnya berisi nilai kosong (NaN). Hal ini wajar ter
+### Deskripsi Variabel (Fitur)
+- **`userId`**: ID unik yang diberikan untuk setiap pengguna dalam dataset.
+- **`movieId`**: ID unik yang diberikan untuk setiap film.
+- **`rating`**: Rating yang diberikan oleh pengguna terhadap film, dalam rentang angka desimal.
+- **`timestamp`**: Waktu dalam format Unix timestamp yang mencatat kapan rating diberikan.
+- **`title`**: Judul lengkap film yang dinilai.
+- **`genres`**: Genre atau kategori film, yang bisa terdiri dari lebih dari satu genre yang dipisahkan oleh tanda `|`.
 
 ## Data Preparation
 
@@ -111,6 +125,17 @@ Menggunakan metode `.fillna(0)`. Strategi ini menggantikan semua nilai NaN denga
 #### Alasan
 Pemilihan nilai 0 adalah pendekatan umum yang mengasumsikan bahwa jika seorang pengguna belum memberi peringkat pada sebuah film, minatnya dianggap netral atau tidak ada interaksi sama sekali. Ini adalah cara sederhana namun efektif untuk membuat matriks menjadi padat (dense) dan siap untuk dianalisis lebih lanjut.
 
+### Pemisahan Data (Data Splitting)
+
+Pada tahap ini, dataset dibagi menjadi dua bagian: **data latih (train data)** dan **data uji (test data)**. Proses pemisahan data ini penting untuk menguji dan melatih model sistem rekomendasi secara terpisah, agar model dapat dievaluasi dengan data yang tidak digunakan dalam pelatihan.
+
+### Teknik yang Digunakan
+Pemisahan data dilakukan dengan menggunakan teknik **train-test split**. Proporsi pemisahan yang digunakan adalah 80% untuk data latih dan 20% untuk data uji. Hal ini dilakukan menggunakan fungsi `train_test_split()` dari pustaka `sklearn.model_selection`.
+
+```python
+from sklearn.model_selection import train_test_split
+train_data, test_data = train_test_split(data, test_size=0.2, random_state=42)
+```
 ## Modeling and Result
 
 Setelah data disiapkan, tahap selanjutnya adalah membangun model untuk memberikan rekomendasi. Bagian ini merinci model yang dipilih, proses implementasinya, dan hasil akhir berupa daftar rekomendasi film.
@@ -133,16 +158,16 @@ Setelah model dilatih, model tersebut dapat memprediksi rating yang mungkin dibe
 
 | Peringkat | Judul Film                                                          | Prediksi Rating |
 |-----------|---------------------------------------------------------------------|-----------------|
-| 1         | Star Wars: Episode IV - A New Hope (1977)                           | 6.08            |
-| 2         | Star Wars: Episode V - The Empire Strikes Back ...)                 | 5.93            |
-| 3         | Star Wars: Episode VI - Return of the Jedi (1983)                   | 5.75            |
-| 4         | Seven (a.k.a. Se7en) (1995)                                         | 5.71           |
-| 5         | Fargo (1996)                                                        | 5.70            |
-| 6         | Raiders of the Lost Ark (Indiana Jones and the ...                  | 5.52            |
-| 7         | Silence of the Lambs, The (1991)                                    | 5.31            |
-| 8         | Indiana Jones and the Last Crusade (1989)                           | 5.16           |
-| 9         | Princess Bride, The (1987)                                          | 5.16            |
-| 10        | Saving Private Ryan (1998)                                          | 4.91            |
+| 1         | Star Wars: Episode IV - A New Hope (1977)                           | 5.96            |
+| 2         | Star Wars: Episode V - The Empire Strikes Back ...)                 | 5.91            |
+| 3         | Star Wars: Episode VI - Return of the Jedi (1983)                   | 5.85            |
+| 4         | Fargo (1996)                                                        | 5.75            |
+| 5         | Indiana Jones and the Last Crusade (1989)                           | 5.49            |
+| 6         | Raiders of the Lost Ark (Indiana Jones and the ...                  | 5.44            |
+| 7         | Pulp Fiction (1994)                                                 | 5.02            |
+| 8         | American Beauty (1999)                                              | 4.86            |
+| 9         | Princess Bride, The (1987)                                          | 4.78            |
+| 10        | Seven (a.k.a. Se7en) (1995)                                         | 4.65            |
 
 
 ## Evaluation
