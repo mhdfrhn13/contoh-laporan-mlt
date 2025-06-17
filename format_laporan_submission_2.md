@@ -41,13 +41,13 @@ Tujuan utama adalah mengembangkan sebuah model **collaborative filtering** mengg
 #### Mengevaluasi Performa Model Secara Kuantitatif
 Untuk memastikan bahwa model yang dibangun efektif, tujuannya adalah mengukur akurasi prediksinya. Hal ini akan dilakukan dengan menggunakan metrik **Root Mean Squared Error (RMSE)**, yang akan menghitung rata-rata selisih antara rating yang diprediksi oleh model dan rating yang benar-benar diberikan oleh pengguna. Nilai RMSE yang rendah akan menjadi indikator bahwa model tersebut berhasil memprediksi preferensi pengguna dengan baik.
 
-## ata Understanding
+## Data Understanding
 
 Tahap Data Understanding bertujuan untuk mengenal lebih dalam dataset yang akan digunakan. Ini mencakup pemeriksaan jumlah data, kondisi awal, serta deskripsi setiap variabel yang ada.
 
 ### 2.1. Sumber Data
 
-Proyek ini menggunakan dataset **MovieLens (Small)**, yang merupakan kumpulan data populer dan sering dijadikan benchmark untuk penelitian dan pengembangan sistem rekomendasi. Dataset ini dikumpulkan dan dikelola oleh GroupLens, sebuah laboratorium riset di University of Minnesota.
+Proyek ini menggunakan dataset **MovieLens (Small)**, yang merupakan kumpulan data populer dan sering dijadikan benchmark untuk penelitian dan pengembangan sistem rekomendasi. 
 
 **Tautan Unduh**: Dataset dapat diunduh dari situs resmi Kaggle:(https://www.kaggle.com/datasets/akkefa/movielens-9000-movies-dataset)) 
 
