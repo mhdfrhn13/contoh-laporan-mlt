@@ -130,8 +130,6 @@ Berikut adalah teknik-teknik persiapan data yang diterapkan pada dataset ini, di
 - **Penerapan**:
   - **Penghapusan Baris NaT pada 'Date'**: Setelah konversi tipe data, setiap baris di mana 'Date' menghasilkan NaT (karena format yang tidak valid) dihapus dari dataset menggunakan `df.dropna(subset=['Date'])`.
   - **Penghapusan Baris Null pada 'Country'**: Baris yang memiliki nilai null di kolom 'Country' dihapus menggunakan `df.dropna(subset=['Country'])`.
-  - **Imputasi 'Price'**: Nilai-nilai yang hilang di kolom 'Price' diisi dengan nilai rata-rata dari kolom 'Price' itu sendiri menggunakan `df['Price'].fillna(df['Price'].mean(), inplace=True)`. Ini adalah metode imputasi sederhana yang cocok untuk distribusi data yang kurang memiliki outlier ekstrem.
-  - **Imputasi 'Quantity'**: Demikian pula, nilai-nilai yang hilang di kolom 'Quantity' diisi dengan nilai rata-rata dari kolom tersebut menggunakan `df['Quantity'].fillna(df['Quantity'].mean(), inplace=True)`.
 
 #### 3. Rekayasa Fitur 'TotalSales'
 - **Teknik**: Penciptaan Fitur Baru (Feature Creation).
