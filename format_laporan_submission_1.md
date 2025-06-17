@@ -56,7 +56,7 @@ Tautan unduh data: https://www.kaggle.com/datasets/gabrielramos87/an-online-shop
 Dataset ini berisi informasi transaksi penjualan ritel.
 
 - **Jumlah Baris (Observasi)**: Dataset asli memiliki 536.350 baris. Setelah pra-pemrosesan data (penghapusan baris dengan nilai null pada kolom 'Date' dan 'Country', serta penghapusan duplikat), jumlah baris menjadi 531.150.
-- **Jumlah Kolom (Fitur)**: Dataset memiliki 9 kolom.
+- **Jumlah Kolom (Fitur)**: Dataset memiliki 8 kolom.
 - **Tipe Data**:
   - **datetime64[ns]** (1 kolom): untuk informasi waktu.
   - **float64** (3 kolom): untuk nilai numerik dengan desimal.
