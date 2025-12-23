@@ -1,255 +1,215 @@
-# Laporan Proyek Machine Learning - Muhammad Farhan
+# Laporan Proyek Machine Learning - Rafi Nanda Edtrian
 
 ## Domain Proyek
-#### Tujuan Proyek
+Sektor ritel sangat kompetitif, dan memahami penjualan sangat penting untuk kesuksesan bisnis. Kemampuan memprediksi tren penjualan, mengidentifikasi produk populer, dan memahami pola pembelian pelanggan adalah kunci pengambilan keputusan strategis. Tanpa analisis, perusahaan menghadapi tantangan seperti manajemen inventaris yang tidak efisien dan pemasaran yang tidak efektif.
 
-Proyek ini bertujuan untuk membangun model prediktif yang dapat memperkirakan kualitas wine berdasarkan data kimiawi yang ada, seperti kadar alkohol, keasaman, kadar gula, dan lainnya. Dengan menggunakan dataset yang terdiri dari berbagai fitur kimia, kita akan mencoba untuk membangun model yang dapat memberikan prediksi yang lebih akurat mengenai kualitas wine, baik untuk keperluan produksi maupun pemasaran.
+Proyek ini menggunakan dataset transaksi penjualan historis (nomor transaksi, tanggal, detail produk, harga, kuantitas, pelanggan, negara) untuk mendapatkan wawasan. Tujuannya adalah mengidentifikasi tren penjualan, mengevaluasi kinerja produk, dan memahami pola pembelian pelanggan.
 
-#### Keuntungan Penerapan Predictive Analysis dalam Industri Wine
-
-Penerapan **predictive analysis** dalam industri wine menawarkan berbagai keuntungan, antara lain:
-1. **Efisiensi dalam Penilaian Kualitas**
-Dengan menggunakan model machine learning, proses penilaian kualitas wine dapat dilakukan lebih cepat dan dengan hasil yang lebih konsisten, mengurangi ketergantungan pada penilaian manusia yang mungkin dipengaruhi oleh subjektivitas.
-2. **Pemahaman yang Lebih Mendalam tentang Faktor-faktor yang Mempengaruhi Kualitas**
-Proyek ini akan mengidentifikasi hubungan antara berbagai faktor kimiawi dan kualitas wine, memberikan wawasan berharga bagi produsen untuk memahami lebih baik bagaimana elemen-elemen tertentu mempengaruhi rasa dan kualitas wine.
-3. **Peningkatan Kualitas Produk**
-Dengan adanya prediksi yang lebih akurat mengenai kualitas wine, produsen dapat lebih tepat dalam mengatur proses produksi mereka, mulai dari pemilihan anggur hingga pengolahan dan pematangan wine. Ini dapat membantu meningkatkan kualitas produk secara keseluruhan dan meminimalkan produk yang tidak memenuhi standar kualitas.
-4. **Peluang untuk Pengembangan Industri Wine**
-Di pasar yang semakin kompetitif, produsen wine yang mampu mengandalkan data dan teknologi untuk meningkatkan kualitas produk mereka memiliki keunggulan besar. Penggunaan machine learning untuk analisis kualitas wine bisa menjadi nilai jual yang menarik di pasar global.
+Dengan menggunakan analisis prediktif, khususnya model regresi linier, kami akan memprediksi total penjualan berdasarkan harga dan kuantitas. Prediksi yang akurat akan membantu perusahaan ritel mengoptimalkan inventaris, merencanakan promosi yang efektif, meningkatkan kepuasan pelanggan, dan membuat keputusan bisnis berbasis data. Secara keseluruhan, proyek ini menunjukkan bagaimana data penjualan dapat digunakan untuk keunggulan kompetitif dan pertumbuhan bisnis.
 
 ## Business Understanding
 
-#### 1. **Pendahuluan**
-Dalam industri minuman, khususnya produksi wine, kualitas produk sangat penting untuk memenuhi harapan konsumen. Salah satu cara untuk menilai kualitas wine adalah dengan menggunakan penilaian subjektif, yang sering kali dipengaruhi oleh preferensi individu. Oleh karena itu, proyek ini bertujuan untuk mengembangkan model prediktif yang dapat memberikan prediksi objektif tentang kualitas wine berdasarkan data kimiawi yang ada. Model ini akan membantu produsen dalam meningkatkan kualitas produk secara konsisten dan efisien.
+### Klarifikasi Masalah
 
-#### 2. **Pernyataan Masalah (Problem Statement)**
-Meskipun kualitas wine dapat dinilai oleh ahli sommelier dan pengamat lainnya, penilaian ini sering kali bersifat subjektif dan bervariasi antara satu individu dengan individu lainnya. Oleh karena itu, masalah utama yang dihadapi adalah:
-- **Keterbatasan dalam penilaian kualitas yang konsisten**: Penilaian kualitas yang bersifat subjektif sulit untuk diandalkan dalam konteks produksi massal dan pengendalian kualitas.
-- **Kurangnya sistem prediktif yang dapat mengidentifikasi kualitas berdasarkan parameter kimiawi**: Proses penilaian kualitas sering kali tidak memanfaatkan data objektif yang tersedia dari analisis kimia dan sifat fisik wine.
+Tahap **Business Understanding** adalah fondasi dari setiap proyek analisis data, yang memastikan bahwa tim analitik memiliki pemahaman yang jelas dan komprehensif tentang tujuan bisnis dan masalah yang perlu dipecahkan. Proses klarifikasi masalah melibatkan identifikasi tantangan spesifik yang dihadapi bisnis, merumuskan pertanyaan yang tepat, dan menentukan bagaimana solusi berbasis data dapat memberikan nilai.
 
-Model prediktif yang dikembangkan dalam proyek ini bertujuan untuk memecahkan masalah ini dengan memberikan estimasi kualitas wine secara otomatis menggunakan data kimiawi yang tersedia.
+### Problem Statements (Pernyataan Masalah)
 
-#### 3. **Tujuan Proyek**
-Untuk menjawab pernyataan masalah di atas, proyek ini memiliki tujuan utama sebagai berikut:
-- **Membangun Model Prediktif**: Mengembangkan model prediktif yang dapat memperkirakan kualitas wine berdasarkan fitur kimiawi seperti kadar alkohol, pH, asam volatil, dan lainnya.
-- **Meningkatkan Konsistensi Penilaian Kualitas**: Menerapkan teknik machine learning untuk menghasilkan prediksi kualitas yang konsisten, yang tidak dipengaruhi oleh subjektivitas manusia.
-- **Meningkatkan Pengendalian Kualitas Produksi**: Membantu produsen wine untuk lebih memahami bagaimana faktor kimiawi mempengaruhi kualitas wine, sehingga dapat meningkatkan proses produksi secara lebih efektif.
-- **Memberikan Insight Mendalam tentang Faktor-Faktor yang Mempengaruhi Kualitas Wine**: Mengidentifikasi hubungan antara berbagai faktor kimia dan kualitas wine, yang dapat menjadi bahan pertimbangan dalam penelitian atau inovasi produk baru.
+Berdasarkan analisis awal data penjualan dan kebutuhan umum dalam sektor ritel, kami mengidentifikasi pernyataan masalah berikut:
 
-#### 4. **Solusi yang Diharapkan**
-Dengan membangun model prediktif yang memanfaatkan data kimiawi yang ada, diharapkan model ini dapat memberikan hasil yang akurat dan dapat diandalkan untuk memprediksi kualitas wine. Dengan demikian, produsen dapat:
-- Mengurangi ketergantungan pada penilaian subjektif.
-- Menjamin kualitas wine yang lebih stabil dan konsisten di setiap batch produksi.
-- Mengoptimalkan proses produksi untuk mencapai kualitas yang lebih baik dengan biaya yang lebih efisien.
+1. **Volatilitas Penjualan yang Tidak Terprediksi**  
+   Perusahaan ritel sering kali kesulitan memprediksi fluktuasi permintaan produk. Ketidakmampuan untuk memperkirakan volume penjualan di masa depan menyebabkan:
+   - **Overstocking (kelebihan stok)**: Penumpukan inventaris yang tidak terjual, mengakibatkan biaya penyimpanan tinggi, risiko kerusakan atau kadaluwarsa produk, dan penurunan margin keuntungan.
+   - **Understocking (kekurangan stok)**: Kehabisan stok produk yang diminati, menyebabkan hilangnya potensi penjualan, ketidakpuasan pelanggan, dan kerusakan reputasi merek.
+
+2. **Kurangnya Wawasan Spesifik Produk**  
+   Manajer produk tidak memiliki visibilitas yang cukup mengenai produk mana yang benar-benar mendorong pendapatan signifikan atau produk mana yang berkinerja buruk. Ini menghambat pengambilan keputusan terkait pengembangan produk, promosi, atau penghapusan produk.
+
+3. **Inefisiensi Strategi Pemasaran dan Promosi**  
+   Tanpa pemahaman yang jelas tentang kapan dan bagaimana penjualan paling mungkin terjadi, upaya pemasaran dan promosi seringkali bersifat generik dan kurang efektif. Hal ini dapat menyebabkan pemborosan anggaran pemasaran pada kampanye yang tidak memberikan return on investment (ROI) yang optimal.
+
+### Goals (Tujuan)
+
+Untuk mengatasi pernyataan masalah di atas, proyek analisis prediktif ini menetapkan tujuan-tujuan berikut:
+
+1. **Membangun Model Prediksi Penjualan yang Akurat**  
+   Mengembangkan model pembelajaran mesin (regresi linier) yang mampu memprediksi **'TotalSales'** dengan tingkat akurasi yang tinggi berdasarkan fitur-fitur yang relevan seperti **'Price'** dan **'Quantity'**. Model ini akan memberikan perkiraan penjualan yang andal untuk membantu dalam perencanaan inventaris.
+
+2. **Mengidentifikasi Faktor-faktor Pendorong Penjualan**  
+   Menganalisis fitur-fitur dalam dataset untuk memahami bagaimana masing-masing fitur (misalnya, harga dan kuantitas) berkorelasi dengan total penjualan. Wawasan ini akan membantu dalam merumuskan strategi penetapan harga dan pengelolaan inventaris yang lebih baik.
+
+3. **Mendukung Pengambilan Keputusan Strategis Berbasis Data**  
+   Menyediakan alat dan wawasan bagi manajemen untuk membuat keputusan yang lebih tepat terkait:
+   - **Manajemen Inventaris**: Optimasi level stok untuk menghindari overstocking dan understocking.
+   - **Strategi Pemasaran**: Penargetan promosi yang lebih cerdas dan alokasi anggaran yang efisien.
+   - **Pengembangan Produk**: Pemahaman tentang produk yang diminati untuk panduan keputusan inovasi atau diversifikasi produk.
   
 ## Data Understanding
 
-### 1. **Informasi Umum Dataset**
-Dataset yang digunakan dalam proyek ini adalah dataset mengenai kualitas wine merah yang mencakup berbagai parameter kimiawi dan kualitas produk akhir. Dataset ini memiliki sejumlah baris dan kolom yang berisi informasi yang relevan untuk tujuan prediksi kualitas wine. Berikut adalah informasi umum mengenai dataset:
+Bagian ini bertujuan untuk memberikan pemahaman mendalam tentang data yang digunakan dalam proyek ini, termasuk karakteristik, kondisi, dan deskripsi setiap variabel atau fitur.
 
-- **Jumlah Data**: Dataset ini terdiri dari 1599 sampel (baris) dan 12 fitur (kolom).
-- **Sumber Data**: Dataset diambil dari kumpulan data yang tersedia secara publik di UCI Machine Learning Repository, yang digunakan untuk analisis kualitas wine merah.
+### Sumber Data
+Dataset yang digunakan dalam proyek ini adalah **Sales Transaction v.4a.csv**.  
+Tautan unduh data: https://www.kaggle.com/datasets/gabrielramos87/an-online-shop-business
 
-### 2. **Kondisi Data**
-Setelah melakukan pemeriksaan awal, kami menemukan bahwa dataset tidak mengandung nilai yang hilang atau missing values, yang berarti data telah siap digunakan tanpa memerlukan imputation. Semua nilai dalam dataset sudah terisi dengan lengkap dan konsisten.
+### Informasi Umum Dataset
+Dataset ini berisi informasi transaksi penjualan ritel.
 
-### 3. **Penjelasan Fitur**
+- **Jumlah Baris (Observasi)**: Dataset asli memiliki 536.350 baris. Setelah pra-pemrosesan data (penghapusan baris dengan nilai null pada kolom 'Date' dan 'Country', serta penghapusan duplikat), jumlah baris menjadi 531.150.
+- **Jumlah Kolom (Fitur)**: Dataset memiliki 8 kolom.
+- **Tipe Data**:
+  - **datetime64[ns]** (1 kolom): untuk informasi waktu.
+  - **float64** (3 kolom): untuk nilai numerik dengan desimal.
+  - **object** (5 kolom): untuk nilai teks atau kategori.
+- **Missing Values (Nilai Hilang)**:
+  - Sebelum pembersihan: Kolom 'CustomerNO' terdapat 55 missing values 
+  - Setelah pembersihan: Tidak ada nilai null di kolom manapun.
+- **Duplikasi Data**:
+  - Sebelum pembersihan: Terdapat 5200 duplicated data
+  - Setelah pembersihan: Tidak ada duplicated.
 
-Dataset ini terdiri dari beberapa fitur yang menggambarkan sifat kimiawi dari wine serta kualitas wine sebagai target prediksi. Berikut adalah penjelasan rinci mengenai setiap fitur dalam dataset.
+### Deskripsi Variabel (Fitur)
+Berikut adalah uraian dari setiap kolom (variabel/fitur) yang terdapat dalam dataset:
 
-1. **Fixed Acidity (Asiditas Tetap)**
-- **Tipe**: Numerik
-- **Deskripsi**: Kadar asam tetap dalam wine yang tidak mudah menguap. Asam tetap ini berperan penting dalam rasa dan stabilitas wine. Asiditas tetap yang tinggi dapat memberikan rasa segar dan stabil pada wine.
-  
-2. **Volatile Acidity (Asiditas Volatil)**
-- **Tipe**: Numerik
-- **Deskripsi**: Kadar asam asetik dalam wine yang berperan dalam pengaruh rasa asam. Asiditas volatil yang tinggi dapat menyebabkan wine terasa asam, dan jika terlalu tinggi, wine akan terasa tidak enak.
+1. **TransactionNo**
+   - **Tipe Data**: Object (String)
+   - **Deskripsi**: Nomor unik untuk setiap transaksi atau faktur. Ini dapat berisi kombinasi angka dan huruf.
 
-3. **Citric Acid (Asam Sitrus)**
-- **Tipe**: Numerik
-- **Deskripsi**: Kadar asam sitrat dalam wine. Asam sitrat memberikan rasa asam segar yang sering ditemukan pada wine putih. Meskipun kontribusinya tidak sebesar asam tetap atau asam volatil, asam sitrus memberikan kesegaran pada wine.
+2. **Date**
+   - **Tipe Data**: datetime64[ns]
+   - **Deskripsi**: Tanggal dan waktu ketika transaksi terjadi.
 
-4. **Residual Sugar (Gula Sisa)**
-- **Tipe**: Numerik
-- **Deskripsi**: Jumlah gula yang tersisa dalam wine setelah proses fermentasi. Gula ini mempengaruhi rasa manis atau kering pada wine. Wine dengan kandungan gula sisa tinggi cenderung lebih manis.
+3. **ProductNo**
+   - **Tipe Data**: Object (String)
+   - **Deskripsi**: Nomor identifikasi unik untuk setiap produk.
 
-5. **Chlorides (Klorida)**
-- **Tipe**: Numerik
-- **Deskripsi**: Kandungan klorida (garam) dalam wine. Meskipun tidak memiliki pengaruh langsung pada rasa, kandungan klorida yang terlalu tinggi dapat memberikan rasa masin atau mengubah profil rasa wine secara keseluruhan.
+4. **ProductName**
+   - **Tipe Data**: Object (String)
+   - **Deskripsi**: Nama deskriptif dari produk yang terjual.  
+   - **Contoh Nilai Unik**: 'Set Of 2 Wooden Market Crates', 'Christmas Star Wish List Chalkboard', 'Storage Tin Vintage Leaf', dll.
 
-6. **Free Sulfur Dioxide (Sulfida Bebas)**
-- **Tipe**: Numerik
-- **Deskripsi**: Kandungan sulfur dioksida bebas dalam wine. Sulfur dioksida digunakan untuk mencegah pertumbuhan mikroorganisme yang tidak diinginkan dan untuk menjaga stabilitas wine. Kadar sulfur dioksida bebas yang cukup penting untuk pengawetan dan perlindungan kualitas wine.
+5. **Price**
+   - **Tipe Data**: float64
+   - **Deskripsi**: Harga jual per unit dari produk.  
+   - **Statistik**:
+     - Minimum: 5.13
+     - Maksimum: 660.62
+     - Rata-rata: sekitar 12.49
 
-7. **Total Sulfur Dioxide (Sulfida Total)**
-- **Tipe**: Numerik
-- **Deskripsi**: Total kandungan sulfur dioksida, termasuk baik yang terikat maupun yang bebas. Kadar sulfur dioksida ini membantu melindungi wine dari oksidasi dan mempertahankan kualitas rasa selama penyimpanan.
+6. **Quantity**
+   - **Tipe Data**: float64
+   - **Deskripsi**: Jumlah produk yang terjual dalam satu transaksi. Perlu dicatat bahwa terdapat nilai negatif yang mungkin mengindikasikan retur barang.  
+   - **Statistik**:
+     - Minimum: -80995.00
+     - Maksimum: 80995.00
+     - Rata-rata: sekitar 10.18
 
-8. **Density (Kepadatan)**
-- **Tipe**: Numerik
-- **Deskripsi**: Kepadatan wine pada suhu tertentu. Kepadatan ini dapat digunakan untuk menentukan kandungan alkohol dan air dalam wine. Wine dengan kepadatan lebih tinggi biasanya memiliki kandungan alkohol lebih rendah, sedangkan wine dengan kepadatan lebih rendah memiliki alkohol yang lebih tinggi.
+7. **CustomerNo**
+   - **Tipe Data**: Object (String)
+   - **Deskripsi**: Nomor identifikasi unik untuk setiap pelanggan.
 
-9. **pH**
-- **Tipe**: Numerik
-- **Deskripsi**: pH wine yang menggambarkan tingkat keasaman. pH wine berperan penting dalam rasa dan stabilitas wine. Wine dengan pH lebih rendah cenderung lebih asam, sementara pH lebih tinggi menunjukkan sifat wine yang lebih lembut dan sedikit lebih manis.
-
-10. **Sulphates (Sulfat)**
-- **Tipe**: Numerik
-- **Deskripsi**: Kadar sulfat dalam wine yang berfungsi sebagai pengawet dan dapat mempengaruhi rasa wine. Sulfat yang tinggi dapat memberikan rasa tertentu pada wine dan mempengaruhi keseimbangan antara rasa manis dan asam.
-
-11. **Alcohol (Alkohol)**
-- **Tipe**: Numerik
-- **Deskripsi**: Kandungan alkohol dalam wine yang berperan dalam rasa, aroma, dan kekuatan wine. Semakin tinggi kandungan alkohol, wine cenderung memiliki rasa yang lebih kuat dan lebih berat.
-
-12. **Quality (Kualitas)**
-- **Tipe**: Kategorikal (Integer)
-- **Deskripsi**: Nilai kualitas wine yang dinilai berdasarkan parameter rasa dan kimiawi. Nilai kualitas ini merupakan target variabel yang akan diprediksi oleh model. Nilainya berkisar antara 0 (terendah) hingga 10 (tertinggi), dengan 6-7 sebagai kualitas standar yang sering ditemui pada dataset ini.
-
-### 4. **Sumber Dataset**
-https://www.kaggle.com/datasets/uciml/red-wine-quality-cortez-et-al-2009/code
+8. **Country**
+   - **Tipe Data**: Object (String)
+   - **Deskripsi**: Negara tempat transaksi dilakukan.  
+   - **Contoh Nilai Unik**: 'United Kingdom', 'Norway', 'Belgium', 'Germany', 'France', dll.
 
 ## Data Preparation
 
-### 1. **Penerapan Data Preparation**
-Data preparation adalah langkah penting dalam proyek ini untuk memastikan bahwa dataset yang digunakan siap untuk pelatihan model prediktif. Proses ini mencakup beberapa tahapan yang bertujuan untuk membersihkan data, mengubah skala fitur, dan membagi data menjadi subset yang tepat untuk pelatihan, validasi, dan pengujian model.
+Tahap **Data Preparation** adalah langkah krusial dalam siklus hidup proyek analisis data, di mana data mentah diubah menjadi format yang bersih dan terstruktur, siap untuk dianalisis dan dimodelkan. Proses ini melibatkan serangkaian teknik untuk menangani nilai yang hilang, mengoreksi tipe data, merekayasa fitur baru, dan menghilangkan duplikasi.
 
-### 2. **Teknik Data Preparation yang Dilakukan**
+### Penerapan dan Teknik Data Preparation
 
-#### a. **Pemeriksaan Nilai yang Hilang (Missing Values)**
-- Sebelum melanjutkan ke tahapan model training, langkah pertama yang dilakukan adalah memeriksa apakah terdapat nilai yang hilang (missing values) dalam dataset. Hasil pemeriksaan menunjukkan bahwa dataset **tidak memiliki nilai yang hilang**, sehingga tidak diperlukan penanganan lebih lanjut terhadap data yang hilang.
+Berikut adalah teknik-teknik persiapan data yang diterapkan pada dataset ini, diuraikan secara berurutan:
 
-#### b. **Pemisahan Fitur dan Target Variabel**
-- **Fitur (Features)**: Semua kolom dalam dataset kecuali kolom **quality** digunakan sebagai fitur yang menggambarkan karakteristik kimiawi wine.
-- **Target (Target Variable)**: Kolom **quality** digunakan sebagai target variabel yang ingin diprediksi, yang menunjukkan kualitas wine berdasarkan penilaian.
+#### 1. Konversi Tipe Data Kolom 'Date'
+- **Teknik**: Konversi Tipe Data (Type Casting) dan Penanganan Kesalahan.
+- **Penerapan**: Kolom 'Date' awalnya mungkin memiliki tipe data object atau string. Untuk memungkinkan analisis berbasis waktu dan ekstraksi fitur waktu, kolom ini dikonversi menjadi tipe data `datetime64[ns]` menggunakan `pd.to_datetime()`. Argumen `format='mixed'` digunakan untuk menangani berbagai format tanggal yang mungkin ada, dan `errors='coerce'` akan mengubah nilai tanggal yang tidak dapat diurai menjadi NaT (Not a Time).
 
-#### c. **Normalisasi Data (Scaling)**
-- Fitur-fitur dalam dataset memiliki skala yang berbeda-beda (misalnya, kadar alkohol dan kadar asam sitrat memiliki rentang nilai yang sangat berbeda). Untuk memastikan bahwa model tidak lebih menekankan pada fitur dengan skala yang lebih besar, dilakukan **normalisasi** pada fitur numerik menggunakan **StandardScaler** dari **scikit-learn**.
-- **StandardScaler** mengubah setiap fitur menjadi distribusi dengan rata-rata 0 dan standar deviasi 1. Ini membantu memastikan bahwa semua fitur memiliki skala yang seragam saat digunakan dalam pelatihan model.
+#### 2. Penanganan Nilai Hilang (Missing Values)
+- **Teknik**: Penghapusan Baris (Row Deletion) dan Imputasi Nilai Rata-Rata (Mean Imputation).
+- **Penerapan**:
+  - **Penghapusan Baris NaT pada 'Date'**: Setelah konversi tipe data, setiap baris di mana 'Date' menghasilkan NaT (karena format yang tidak valid) dihapus dari dataset menggunakan `df.dropna(subset=['Date'])`.
+  - **Penghapusan Baris Null pada 'Country'**: Baris yang memiliki nilai null di kolom 'Country' dihapus menggunakan `df.dropna(subset=['Country'])`.
 
-#### d. **Pembagian Data (Train, Validation, Test Split)**
-- Data dibagi menjadi tiga bagian utama untuk memastikan pelatihan dan pengujian model yang efektif:
-  1. **Train Set (60%)**: Digunakan untuk melatih model dan mengoptimalkan parameter.
-  2. **Validation Set (20%)**: Digunakan untuk validasi selama pelatihan untuk memantau overfitting dan memilih parameter model terbaik.
-  3. **Test Set (20%)**: Digunakan untuk menguji kinerja model setelah pelatihan selesai, dan memberikan gambaran seberapa baik model dapat menggeneralisasi pada data yang belum pernah dilihat sebelumnya.
+#### 3. Rekayasa Fitur 'TotalSales'
+- **Teknik**: Penciptaan Fitur Baru (Feature Creation).
+- **Penerapan**: Untuk mendapatkan metrik penjualan agregat per baris transaksi, kolom 'TotalSales' baru dibuat. Kolom ini dihitung dengan mengalikan nilai di kolom 'Price' dengan nilai di kolom 'Quantity' (`df['TotalSales'] = df['Price'] * df['Quantity']`). Fitur ini penting karena 'TotalSales' adalah target utama untuk model prediktif.
 
-#### e. **Penghapusan Data yang Tidak Relevan**
-- Tidak ada fitur yang dihapus dalam proses ini karena semua fitur dalam dataset dianggap relevan untuk analisis kualitas wine. Setiap fitur kimiawi seperti pH, alkohol, kadar asam, dan lainnya memiliki kontribusi dalam menentukan kualitas wine.
+#### 4. Konversi Tipe Data Kolom 'CustomerNo'
+- **Teknik**: Konversi Tipe Data (Type Casting).
+- **Penerapan**: Meskipun 'CustomerNo' mungkin terlihat seperti angka, itu berfungsi sebagai pengenal unik daripada nilai numerik yang dapat dioperasikan secara matematis. Oleh karena itu, kolom ini dikonversi menjadi tipe data string (object) menggunakan `df['CustomerNo'].astype(str)` untuk memastikan penanganannya sebagai variabel kategorikal atau ID.
 
-### 3. **Ringkasan Proses Data Preparation**
-Proses data preparation yang dilakukan bertujuan untuk:
-- Menyiapkan dataset agar siap digunakan dalam pelatihan model.
-- Menjamin bahwa data tidak mengandung nilai yang hilang dan setiap fitur memiliki skala yang konsisten.
-- Memastikan bahwa model dapat dilatih dan diuji dengan data yang terbagi secara adil untuk menghindari overfitting dan memastikan generalisasi yang baik.
+#### 5. Penghapusan Duplikat
+- **Teknik**: Penghapusan Duplikasi (Duplicate Removal).
+- **Penerapan**: Untuk memastikan integritas data dan mencegah bias dalam analisis dan pemodelan, semua baris yang merupakan duplikat sempurna di seluruh kolom dihapus menggunakan `df = df.drop_duplicates()`.
 
-Dengan melakukan teknik-teknik tersebut, data yang digunakan dalam proyek ini siap untuk membangun model prediktif yang akurat dan dapat diandalkan.
+## Modelling
 
-## Modeling
+Untuk mengatasi masalah volatilitas penjualan dan memprediksi 'TotalSales', model **Regresi Linier (Linear Regression)** digunakan. Regresi Linier adalah algoritma machine learning yang banyak digunakan untuk memodelkan hubungan linier antara satu atau lebih variabel independen (fitur) dan variabel dependen (target). Dalam konteks ini, model akan belajar bagaimana 'Price' dan 'Quantity' memengaruhi 'TotalSales'.
 
-### 1. **Pembuatan Model Machine Learning**
-Pada tahap ini, kami menggunakan **Random Forest Regressor** sebagai model machine learning untuk memprediksi kualitas wine berdasarkan fitur-fitur kimiawi yang tersedia. **Random Forest** dipilih karena kemampuannya untuk menangani data numerik yang besar dan kompleks serta kemampuannya untuk mengurangi risiko overfitting melalui teknik ensemble learning.
+### Tahapan dan Parameter Pemodelan
 
-Model ini dirancang untuk mengidentifikasi hubungan antara berbagai fitur kimiawi, seperti kadar alkohol, pH, asam volatil, dan gula sisa, dengan **variabel target** yang merupakan **kualitas** wine.
+Proses pemodelan dilakukan melalui beberapa tahapan kunci:
 
-#### Mengapa Memilih Random Forest Regressor?
-- **Random Forest** adalah metode **ensemble learning** yang membangun banyak pohon keputusan (decision trees) dan menghasilkan prediksi rata-rata dari semua pohon.
-- Model ini dapat menangani baik **linear** maupun **non-linear** relationship antara fitur dan target variabel.
-- Keunggulannya adalah **robustness** terhadap overfitting, terutama jika jumlah pohon yang digunakan cukup besar.
+#### 1. Pemilihan Fitur dan Target
 
-### 2. **Tahapan Proses Pemodelan**
-Berikut adalah tahapan yang dilakukan dalam proses pemodelan:
+- **Fitur (Variabel Independen)**: Berdasarkan tujuan proyek, fitur yang dipilih untuk memprediksi total penjualan adalah **Price** dan **Quantity**. Kedua variabel ini secara langsung memengaruhi nilai 'TotalSales'.
+- **Target (Variabel Dependen)**: Variabel yang ingin diprediksi oleh model adalah **TotalSales**.
 
-#### a. **Pelatihan Model (Model Training)**
-   - Data yang telah dibagi sebelumnya menjadi **train**, **validation**, dan **test** digunakan untuk melatih model. **Train set** digunakan untuk melatih model, sementara **validation set** digunakan untuk memantau kinerja model selama proses pelatihan untuk mencegah overfitting.
-   - Model **Random Forest Regressor** dengan 100 pohon keputusan (estimators) dilatih pada data **train set**.
+#### 2. Pembagian Data
 
-#### b. **Penentuan Parameter Model**
-   Pada proses pelatihan, beberapa parameter utama yang digunakan untuk model adalah:
-   - **n_estimators**: Menentukan jumlah pohon keputusan yang akan dibangun dalam random forest. Pada proyek ini, kami menggunakan **100 pohon** untuk model.
-   - **random_state**: Digunakan untuk memastikan hasil yang dapat direproduksi. Dengan nilai **42**, setiap eksperimen akan memberikan hasil yang konsisten.
+- **Teknik**: Train-Test Split.
+- **Penerapan**: Dataset dibagi menjadi dua subset utama:
+  - **Data Pelatihan (Training Data)**: Digunakan untuk melatih model, di mana model belajar pola dan hubungan dari data. Sebesar 80% dari total data digunakan sebagai data pelatihan (**X_train**, **y_train**).
+  - **Data Pengujian (Testing Data)**: Digunakan untuk mengevaluasi kinerja model pada data yang belum pernah dilihat sebelumnya, memastikan kemampuan generalisasi model. Sebesar 20% dari total data digunakan sebagai data pengujian (**X_test**, **y_test**).
 
-#### c. **Optimasi Model**
-   - Kami menggunakan data **train set** untuk melatih model dan memanfaatkan data **validation set** untuk mengevaluasi kinerja model selama proses pelatihan.
-   - Hasil prediksi pada data **validation set** digunakan untuk memantau kinerja model dan menyesuaikan parameter jika diperlukan.
+- **Parameter**:
+  - `test_size=0.2`: Menunjukkan bahwa 20% dari data akan dialokasikan untuk set pengujian.
+  - `random_state=42`: Ini adalah seed untuk pengacakan yang digunakan dalam pembagian data. Penggunaan nilai `random_state` yang tetap memastikan bahwa pembagian data akan selalu sama setiap kali kode dijalankan, sehingga hasil dapat direproduksi.
 
-#### d. **Evaluasi Model**
-   Setelah model selesai dilatih, kami mengevaluasi model dengan menggunakan **test set** untuk mendapatkan hasil yang lebih objektif tentang kinerja model yang belum pernah dilihat sebelumnya.
-   
-### 3. **Penjelasan Parameter Model**
-Berikut adalah penjelasan mengenai parameter yang digunakan pada **Random Forest Regressor** dalam proyek ini:
+#### 3. Inisialisasi dan Pelatihan Model
 
-- **n_estimators**: 
-  - Parameter ini mengontrol jumlah pohon keputusan dalam random forest. Semakin banyak pohon yang digunakan, semakin stabil hasil prediksi, namun juga membutuhkan waktu lebih lama untuk pelatihan.
-  - Dalam proyek ini, kami menggunakan **100 pohon** untuk mendapatkan keseimbangan antara kecepatan pelatihan dan akurasi.
-  
-- **random_state**: 
-  - Parameter ini digunakan untuk memastikan bahwa hasil pelatihan dapat direproduksi. Dengan nilai yang sama, model akan menghasilkan hasil yang konsisten meskipun dijalankan beberapa kali.
-  
-- **max_features (default "auto")**:
-  - Menentukan jumlah fitur yang akan dipertimbangkan untuk pemecahan setiap simpul dalam pohon keputusan. Pengaturan "auto" secara otomatis memilih jumlah fitur yang optimal.
-  
-- **min_samples_split (default 2)**:
-  - Menentukan jumlah minimum sampel yang diperlukan untuk membagi simpul. Mengatur nilai yang lebih besar akan menghasilkan pohon yang lebih sederhana dan lebih sedikit kompleksitas.
-  
-- **min_samples_leaf (default 1)**:
-  - Menentukan jumlah minimum sampel yang harus ada di setiap daun. Mengatur nilai ini lebih tinggi dapat mengurangi overfitting.
+- **Teknik**: Inisialisasi Model dan Fitting.
+- **Penerapan**: Model **LinearRegression()** diinisialisasi tanpa parameter khusus karena merupakan model dasar. Setelah inisialisasi, model dilatih menggunakan data pelatihan dengan memanggil metode `fit()` (`model.fit(X_train, y_train)`). Pada tahap ini, model menghitung koefisien (bobot) untuk setiap fitur yang meminimalkan error antara prediksi dan nilai aktual.
 
-### 4. **Pembuatan Model dan Pelatihan**
-Setelah parameter ditentukan, model dibangun dan dilatih menggunakan **train set**. Selama pelatihan, model mempelajari hubungan antara fitur kimiawi dan kualitas wine, serta mengoptimalkan pohon-pohon keputusan untuk menghasilkan prediksi yang lebih akurat.
+#### 4. Pembuatan Prediksi
 
-#### Kode Implementasi:
-```python
-from sklearn.ensemble import RandomForestRegressor
+- **Teknik**: Inferensi Model.
+- **Penerapan**: Setelah model dilatih, model digunakan untuk membuat prediksi pada set pengujian yang belum pernah dilihat sebelumnya (`y_pred = model.predict(X_test)`). Prediksi ini kemudian akan dibandingkan dengan nilai 'TotalSales' aktual dari set pengujian untuk mengevaluasi kinerja model.
 
-# Inisialisasi model dengan 100 estimators
-model = RandomForestRegressor(n_estimators=100, random_state=42)
+## Evaluasi
 
-# Latih model menggunakan data train
-model.fit(X_train, y_train)
-```
+Bagian evaluasi ini menyajikan metrik-metrik yang digunakan untuk menilai kinerja model machine learning yang telah dibangun, serta menjelaskan interpretasi hasil proyek berdasarkan metrik tersebut. Pemilihan metrik evaluasi disesuaikan dengan konteks data numerik, pernyataan masalah mengenai volatilitas penjualan, dan tujuan untuk memprediksi total penjualan.
 
-## Evaluation
+### Metrik Evaluasi yang Digunakan
 
-### 1. **Metrik Evaluasi yang Digunakan**
+Untuk model regresi, seperti **Regresi Linier** yang digunakan dalam proyek ini, metrik evaluasi berikut adalah standar dan relevan:
 
-Dalam proyek ini, kami menggunakan beberapa **metrik evaluasi** untuk menilai kinerja model prediktif yang dibangun. Metrik ini dipilih berdasarkan konteks dataset, masalah yang dihadapi, dan solusi yang diinginkan.
+#### 1. Mean Absolute Error (MAE)
+- **Definisi**: MAE mengukur rata-rata dari selisih absolut antara nilai prediksi dan nilai aktual. Metrik ini memberikan gambaran tentang seberapa besar "rata-rata" kesalahan prediksi model, tanpa memperhatikan arah kesalahan (apakah prediksi terlalu tinggi atau terlalu rendah). MAE dinyatakan dalam unit yang sama dengan variabel target, sehingga mudah diinterpretasikan.
+- **Relevansi Konteks**: Dalam konteks penjualan, MAE menunjukkan rata-rata jumlah kesalahan (dalam unit mata uang) dari setiap prediksi penjualan. Ini berguna bagi manajemen untuk memahami seberapa jauh perkiraan penjualan model dari angka sebenarnya.
 
-#### a. **Mean Absolute Error (MAE)**
-   - **Deskripsi**: MAE mengukur rata-rata perbedaan absolut antara nilai prediksi dan nilai sebenarnya (ground truth). Nilai MAE yang lebih kecil menunjukkan bahwa model lebih akurat dalam memprediksi kualitas wine.
-   - **Mengapa digunakan?**: MAE memberikan gambaran yang jelas tentang seberapa besar kesalahan prediksi rata-rata yang dihasilkan oleh model. Ini sangat relevan dalam konteks kualitas wine karena kita ingin meminimalkan kesalahan prediksi dan menghasilkan perkiraan yang mendekati kualitas sesungguhnya.
+#### 2. Mean Squared Error (MSE)
+- **Definisi**: MSE menghitung rata-rata dari kuadrat selisih antara nilai prediksi dan nilai aktual. Dengan mengkuadratkan kesalahan, MSE memberikan bobot yang lebih besar pada kesalahan prediksi yang besar. Ini membuat MSE sangat sensitif terhadap outlier.
+- **Relevansi Konteks**: MSE menyoroti dampak dari kesalahan prediksi yang signifikan. Jika ada beberapa prediksi yang sangat jauh dari nilai sebenarnya, MSE akan meningkat drastis, menunjukkan area di mana model perlu perbaikan.
 
-#### b. **Mean Squared Error (MSE)**
-   - **Deskripsi**: MSE menghitung rata-rata kuadrat selisih antara nilai prediksi dan nilai sebenarnya. MSE memberi penalti yang lebih besar pada kesalahan prediksi yang lebih besar, sehingga model akan lebih terdorong untuk menghindari kesalahan besar.
-   - **Mengapa digunakan?**: MSE membantu untuk menilai seberapa besar kesalahan model pada tingkat yang lebih sensitif, memberikan gambaran yang lebih kuat tentang seberapa buruk model dalam memprediksi kualitas wine jika ada kesalahan yang signifikan.
+#### 3. R-squared (R²)
+- **Definisi**: R-squared, atau koefisien determinasi, adalah metrik yang menunjukkan proporsi varians dalam variabel dependen (target) yang dapat dijelaskan oleh variabel independen (fitur) dalam model. Nilainya berkisar antara 0 dan 1. Nilai 1 menunjukkan bahwa model dapat menjelaskan semua varians variabel target, sedangkan nilai 0 menunjukkan bahwa model tidak menjelaskan varians sama sekali.
+- **Relevansi Konteks**: R² adalah indikator seberapa baik model "cocok" dengan data. Dalam konteks penjualan, R² menunjukkan seberapa besar variasi total penjualan dapat dijelaskan oleh variasi harga dan kuantitas. Semakin tinggi nilainya, semakin baik model dalam menangkap hubungan antara fitur dan penjualan.
 
-#### c. **R-squared (R²)**
-   - **Deskripsi**: R-squared mengukur seberapa baik model dapat menjelaskan variansi dalam data target. Nilai R² berkisar antara 0 hingga 1, di mana nilai yang lebih tinggi menunjukkan model yang lebih baik dalam menjelaskan variansi data.
-   - **Mengapa digunakan?**: R² sangat relevan dalam konteks regresi karena memberikan gambaran seberapa baik model dalam mengadaptasi dan menjelaskan pola-pola yang ada dalam data. Semakin tinggi nilai R², semakin baik model dalam memprediksi kualitas wine berdasarkan fitur yang ada.
+### Hasil Proyek Berdasarkan Metrik Evaluasi
 
-### 2. **Hasil Proyek Berdasarkan Metrik Evaluasi**
+Setelah melatih model Regresi Linier dan membuat prediksi pada set pengujian, metrik evaluasi dihitung sebagai berikut:
 
-Berikut adalah hasil evaluasi model menggunakan metrik yang telah disebutkan di atas:
+#### 1. **Mean Absolute Error (MAE)**: 23.357037869163406
+- **Interpretasi**: Secara rata-rata, prediksi 'TotalSales' oleh model kami meleset sekitar 23.35 unit mata uang dari nilai 'TotalSales' aktual. Ini memberikan gambaran langsung tentang rata-rata "kesalahan" model dalam prediksi penjualan.
 
-#### a. **Hasil Evaluasi pada Data Validation**
-- **Mean Absolute Error (MAE)**: 0.43
-  - Hasil ini menunjukkan bahwa rata-rata kesalahan prediksi antara kualitas wine yang sebenarnya dengan yang diprediksi oleh model adalah 0.43.
-- **Mean Squared Error (MSE)**: 0.37
-  - MSE yang lebih tinggi ini mengindikasikan bahwa ada beberapa kesalahan prediksi yang cukup besar. Namun, ini tidak terlalu mengganggu karena MAE relatif rendah.
-- **R-squared (R²)**: 0.41
-  - Nilai R² sebesar 0.41 menunjukkan bahwa model dapat menjelaskan sekitar 41% variansi dalam kualitas wine pada data validation. Meskipun ini tidak terlalu tinggi, ini menunjukkan bahwa model mulai belajar hubungan yang signifikan antara fitur kimiawi dan kualitas wine.
+#### 2. **Mean Squared Error (MSE)**: 114295.10845845914
+- **Interpretasi**: Nilai MSE yang tinggi (sekitar 1.1 juta) menunjukkan bahwa ada beberapa kesalahan prediksi yang cukup besar (outlier) yang ditekankan oleh kuadratnya. Meskipun MAE terlihat moderat, MSE yang besar mengindikasikan bahwa model mungkin kurang baik dalam memprediksi beberapa transaksi dengan nilai penjualan yang sangat tinggi atau rendah. Ini adalah area yang perlu diperhatikan untuk perbaikan model lebih lanjut, mungkin dengan penanganan outlier yang lebih canggih atau fitur tambahan.
 
-#### b. **Hasil Evaluasi pada Data Test**
-- **Mean Absolute Error (MAE)**: 0.44
-  - Hasil pada data test menunjukkan sedikit peningkatan dalam kesalahan prediksi dibandingkan dengan data validation, tetapi tetap berada dalam rentang yang dapat diterima.
-- **Mean Squared Error (MSE)**: 0.33
-  - MSE pada data test lebih rendah dibandingkan dengan data validation, yang menunjukkan bahwa model mungkin lebih baik dalam menggeneralisasi pada data yang belum pernah dilihat sebelumnya.
-- **R-squared (R²)**: 0.50
-  - Nilai R² sebesar 0.50 pada data test menunjukkan bahwa model dapat menjelaskan sekitar 50% variansi dalam kualitas wine. Ini merupakan indikasi yang baik bahwa model cukup efektif dalam mengadaptasi dan memprediksi kualitas wine pada data yang baru.
+#### 3. **R-squared (R²)**: 0.9834570093111258
+- **Interpretasi**: Nilai R² sebesar 0.983 (sekitar 98.34%) menunjukkan bahwa sekitar 98.34% dari variabilitas dalam 'TotalSales' dapat dijelaskan oleh fitur 'Price' dan 'Quantity' dalam model Regresi Linier kami. Ini adalah hasil yang cukup baik, menunjukkan bahwa model memiliki kekuatan prediktif yang substansial dan berhasil menangkap sebagian besar hubungan linier antara fitur yang dipilih dan total penjualan.
 
-### 3. **Kesimpulan Berdasarkan Hasil Evaluasi**
-- Model **Random Forest Regressor** yang dibangun memberikan hasil yang cukup baik dengan **R-squared** sekitar 50% pada data test, yang menunjukkan kemampuan model dalam menggeneralisasi pada data yang belum dilihat sebelumnya.
-- **MAE** dan **MSE** menunjukkan bahwa model memiliki kesalahan prediksi yang relatif rendah, meskipun ada beberapa prediksi yang agak melenceng, terutama pada data validation.
-- Secara keseluruhan, model ini memberikan solusi yang efektif untuk memprediksi kualitas wine berdasarkan fitur kimiawi yang ada, namun masih ada potensi untuk **peningkatan lebih lanjut** dalam hal akurasi dan kemampuan menjelaskan variasi kualitas wine.
+### Kesimpulan
 
-Berdasarkan hasil evaluasi, model ini dapat diterapkan dalam industri wine untuk meningkatkan kontrol kualitas dan menghasilkan prediksi yang lebih konsisten dan akurat.
-
-**---Ini adalah bagian akhir laporan---**
+Secara keseluruhan, model **Regresi Linier** menunjukkan kinerja yang cukup baik dalam memprediksi total penjualan, dengan sebagian besar variasi penjualan dapat dijelaskan oleh harga dan kuantitas. Meskipun ada beberapa prediksi dengan kesalahan besar (ditunjukkan oleh MSE yang tinggi), MAE dan R² menunjukkan bahwa model secara umum dapat memberikan perkiraan yang wajar untuk tujuan perencanaan bisnis.

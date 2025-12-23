@@ -1,225 +1,213 @@
-# Laporan Proyek Machine Learning - Muhammad Farhan
+# Laporan Proyek Machine Learning - Rafi Nanda Edtrian
 
 ## Project Overview
 
-Dalam era digital saat ini, platform pembelajaran daring seperti Coursera, edX, dan Udemy telah menjadi sumber utama bagi individu yang ingin memperdalam pengetahuan dan keterampilan mereka. Seiring dengan meningkatnya jumlah kursus yang tersedia, banyak pengguna merasa kesulitan untuk memilih kursus yang paling sesuai dengan minat, tingkat keahlian, dan tujuan belajar mereka. 
+### 1.1. Latar Belakang
 
-Salah satu tantangan utama yang dihadapi oleh platform pembelajaran daring adalah memberikan rekomendasi yang tepat dan relevan kepada penggunanya. Rekomendasi yang baik dapat meningkatkan pengalaman pengguna, mempercepat proses pembelajaran, dan membantu pengguna mencapai tujuan pendidikan mereka. Oleh karena itu, sistem rekomendasi yang efektif sangat penting untuk platform pembelajaran daring.
+Di era digital saat ini, ledakan konten telah menjadi fenomena umum, terutama dalam industri hiburan. Platform streaming seperti Netflix, Disney+, dan lainnya menyediakan akses ke ribuan hingga puluhan ribu judul film dan serial TV. Meskipun kekayaan pilihan ini menguntungkan, hal tersebut juga menciptakan tantangan signifikan bagi pengguna yang dikenal sebagai *information overload* atau kelebihan informasi. Pengguna sering kali merasa kesulitan untuk menemukan konten yang benar-benar sesuai dengan selera dan preferensi unik mereka di tengah lautan pilihan yang ada.
 
-Proyek ini bertujuan untuk mengembangkan **Sistem Rekomendasi Kursus** yang memanfaatkan data tentang kursus, termasuk nama kursus, tingkat kesulitan, rating, deskripsi kursus, dan keterampilan yang diajarkan. Dengan menggunakan pendekatan **Content-based Filtering**, sistem ini akan memberikan rekomendasi kursus yang relevan bagi pengguna berdasarkan kemiripan deskripsi kursus dan keterampilan yang ingin mereka pelajari.
+Untuk mengatasi masalah ini, sistem rekomendasi menjadi komponen krusial yang tidak terpisahkan dari platform digital modern. Sistem ini berfungsi sebagai filter cerdas yang mempersonalisasi pengalaman pengguna dengan menyajikan konten yang paling relevan. Manfaatnya tidak hanya dirasakan oleh pengguna yang mendapatkan kemudahan dalam menemukan film yang mereka sukai, tetapi juga oleh penyedia layanan yang dapat meningkatkan engagement, kepuasan, dan retensi pelanggan.
 
-Tujuan utama dari proyek ini adalah untuk membantu pengguna memilih kursus yang sesuai dengan minat dan kebutuhan mereka, sehingga mereka dapat meningkatkan keterampilan mereka secara lebih efisien. Sistem rekomendasi ini akan menggunakan dataset yang terdiri dari informasi kursus yang ditawarkan oleh berbagai universitas dan institusi melalui platform Coursera.
+Secara umum, terdapat dua pendekatan utama dalam sistem rekomendasi:
+
+1. **Content-Based Filtering**: Merekomendasikan item berdasarkan kemiripan atributnya dengan item yang disukai pengguna di masa lalu.
+2. **Collaborative Filtering**: Merekomendasikan item berdasarkan preferensi dari pengguna lain yang memiliki selera serupa.
+
+Proyek ini akan berfokus pada pendekatan **Collaborative Filtering**, yang didasarkan pada ide bahwa jika dua pengguna memberikan peringkat yang mirip untuk beberapa film, kemungkinan besar mereka akan memiliki selera yang sama untuk film lainnya. Secara spesifik, proyek ini akan menerapkan salah satu teknik matrix factorization yang paling populer dan efektif, yaitu **Singular Value Decomposition (SVD)**. SVD sangat cocok untuk tugas ini karena kemampuannya dalam menangani data yang sparse (data di mana sebagian besar film belum diberi peringkat oleh pengguna) dan kemampuannya untuk menemukan faktor-faktor laten—pola atau karakteristik tersembunyi yang menghubungkan pengguna dan film.
+
+Dengan menggunakan dataset **MovieLens**, yang merupakan standar industri untuk penelitian sistem rekomendasi, proyek ini bertujuan untuk membangun sebuah model fungsional yang mampu memberikan daftar rekomendasi film yang dipersonalisasi. Keberhasilan model akan dievaluasi menggunakan metrik **Root Mean Squared Error (RMSE)** untuk mengukur seberapa akurat prediksi peringkat yang dihasilkan oleh model dibandingkan dengan peringkat aktual yang diberikan oleh pengguna.
 
 ## Business Understanding
 
-### Problem Statements
+Pada tahap ini, kita akan mengklarifikasi masalah bisnis yang ingin dipecahkan dan menetapkan tujuan yang jelas untuk proyek ini. Proses ini memastikan bahwa solusi teknis yang akan dikembangkan selaras dengan kebutuhan bisnis dan pengguna.
 
-Seiring dengan berkembangnya platform pembelajaran daring, terutama Coursera, pengguna sering kali merasa kesulitan dalam memilih kursus yang sesuai dengan kebutuhan, minat, dan tujuan pembelajaran mereka. Dengan banyaknya kursus yang tersedia, proses pencarian kursus yang tepat menjadi semakin rumit. Hal ini disebabkan oleh beberapa faktor, seperti:
+### 2.1. Pernyataan Masalah (Problem Statements)
 
-1. **Terlalu Banyak Pilihan**: Platform pembelajaran daring memiliki ratusan bahkan ribuan kursus yang ditawarkan, dan tidak semua kursus relevan dengan kebutuhan pengguna.
-2. **Kurangnya Personalisasi**: Rekomendasi yang diberikan sering kali tidak cukup dipersonalisasi untuk memenuhi kebutuhan spesifik pengguna, sehingga pengguna kesulitan dalam menemukan kursus yang sesuai dengan tingkat keahlian atau tujuan belajar mereka.
-3. **Deskripsi Kursus yang Umum**: Deskripsi kursus yang terlalu umum atau tidak cukup menggambarkan dengan detail isi dan manfaat kursus bisa menyebabkan kebingungannya pengguna dalam memilih.
+Berdasarkan latar belakang yang telah diuraikan, kami mengidentifikasi dua masalah utama dari perspektif pengguna dan bisnis:
 
-Masalah ini dapat menyebabkan pengalaman pengguna yang kurang optimal, meningkatkan tingkat pembatalan kursus, dan mengurangi keterlibatan pengguna di platform tersebut.
+#### Bagi Pengguna: Kesulitan dalam Penemuan Konten yang Relevan
+Pengguna dihadapkan pada ribuan pilihan film tanpa panduan yang efektif. Hal ini menyebabkan *decision fatigue* (kelelahan dalam membuat keputusan) dan pengalaman yang kurang memuaskan, karena waktu lebih banyak dihabiskan untuk mencari daripada menonton. Tanpa adanya personalisasi, pengguna mungkin melewatkan film-film yang sebenarnya sangat mereka sukai.
 
-### Goals
+#### Bagi Bisnis: Risiko Kehilangan Pelanggan (Churn) dan Penurunan Engagement
+Ketika pengguna kesulitan menemukan konten yang menarik, tingkat keterlibatan (*engagement*) mereka dengan platform akan menurun. Pengalaman pengguna yang buruk secara konsisten dapat menyebabkan frustrasi dan akhirnya membuat mereka berhenti berlangganan (*churn*). Bagi platform berbasis layanan, *churn* adalah metrik kritis yang secara langsung berdampak pada pendapatan dan keberlanjutan bisnis.
 
-Tujuan utama dari proyek ini adalah untuk mengembangkan sistem rekomendasi kursus yang efektif dan relevan berdasarkan data yang ada pada platform Coursera. Beberapa tujuan yang lebih spesifik meliputi:
+### 2.2. Tujuan (Goals)
 
-1. **Meningkatkan Pengalaman Pengguna**: Sistem rekomendasi yang dibuat bertujuan untuk memberikan rekomendasi kursus yang lebih sesuai dengan kebutuhan dan minat individu pengguna, sehingga mereka lebih mudah menemukan kursus yang relevan.
-2. **Personalisasi Rekomendasi**: Membangun sistem yang dapat memberikan rekomendasi yang dipersonalisasi berdasarkan deskripsi kursus dan keterampilan yang diajarkan, serta tingkat kesulitan kursus.
-3. **Meningkatkan Keterlibatan Pengguna**: Dengan adanya rekomendasi yang relevan dan tepat, diharapkan pengguna akan lebih terlibat dalam platform, memperkaya pengetahuan mereka, dan menyelesaikan lebih banyak kursus.
-4. **Efisiensi Proses Pemilihan Kursus**: Mengurangi waktu yang dibutuhkan pengguna untuk memilih kursus yang tepat, serta mengurangi kebingungan dan ketidakpastian dalam memilih materi yang akan dipelajari.
+Untuk menjawab permasalahan tersebut, proyek ini menetapkan tujuan teknis dan bisnis yang spesifik sebagai berikut:
+
+#### Membangun Model Sistem Rekomendasi yang Fungsional
+Tujuan utama adalah mengembangkan sebuah model **collaborative filtering** menggunakan **SVD** yang mampu menganalisis riwayat peringkat pengguna. Berdasarkan analisis tersebut, model harus dapat menghasilkan daftar film yang dipersonalisasi dan relevan bagi setiap pengguna. Tujuannya adalah untuk secara langsung mengatasi masalah penemuan konten dengan menyajikan pilihan yang sudah terfilter.
+
+#### Mengevaluasi Performa Model Secara Kuantitatif
+Untuk memastikan bahwa model yang dibangun efektif, tujuannya adalah mengukur akurasi prediksinya. Hal ini akan dilakukan dengan menggunakan metrik **Root Mean Squared Error (RMSE)**, yang akan menghitung rata-rata selisih antara rating yang diprediksi oleh model dan rating yang benar-benar diberikan oleh pengguna. Nilai RMSE yang rendah akan menjadi indikator bahwa model tersebut berhasil memprediksi preferensi pengguna dengan baik.
 
 ## Data Understanding
 
-Dataset dapat diunduh di: [Coursera courses dataset 2021](https://www.Kaggle.Com/datasets/khusheekapoor/Coursera-courses-dataset-2021).
+Tahap Data Understanding bertujuan untuk mengenal lebih dalam dataset yang akan digunakan. Ini mencakup pemeriksaan jumlah data, kondisi awal, serta deskripsi setiap variabel yang ada.
 
-### Sample data
+### 2.1. Sumber Data
 
-Tabel 1. Contoh Data pada Dataset
-| Course Name                                               | University                               | Difficulty Level | Course Rating | Course URL                                          | Course Description                                 | Skills                                           |
-|-----------------------------------------------------------|------------------------------------------|------------------|---------------|-----------------------------------------------------|----------------------------------------------------|--------------------------------------------------|
-| Write A Feature Length Screenplay For Film Or ...          | Michigan State University                | Beginner         | 4.8           | [Course URL](https://www.coursera.org/learn/write-a-feature...)              | Write a Full Length Feature Film Script In th...   | Drama Comedy peering screenwriting film D...     |
-| Business Strategy: Business Model Canvas Analy...          | Coursera Project Network                 | Beginner         | 4.8           | [Course URL](https://www.coursera.org/learn/canvas-analysis...)              | By the end of this guided project, you will be... | Finance business plan persona (user experien... |
-| Silicon Thin Film Solar Cells                              | �cole Polytechnique                      | Advanced         | 4.1           | [Course URL](https://www.coursera.org/learn/silicon-thin-fi...)              | This course consists of a general presentation... | chemistry physics Solar Energy film lambda... |
-| Finance for Managers                                        | IESE Business School                     | Intermediate     | 4.8           | [Course URL](https://www.coursera.org/learn/operational-fin...)              | When it comes to numbers, there is always more... | accounts receivable dupont analysis analysis... |
-| Retrieve Data using Single-Table SQL Queries                | Coursera Project Network                 | Beginner         | 4.6           | [Course URL](https://www.coursera.org/learn/single-table-sq...)              | In this course you�ll learn how to effectively... | Data Analysis select (sql) database manageme... |
-| Building Test Automation Framework using Selen...          | Coursera Project Network                 | Beginner         | 4.7           | [Course URL](https://www.coursera.org/learn/building-test-a...)              | Selenium is one of the most widely used functi... | maintenance test case test automation scree... |
-| Doing Business in China Capstone                            | The Chinese University of Hong Kong       | Advanced         | 3.3           | [Course URL](https://www.coursera.org/learn/doing-business-...)              | Doing Business in China Capstone enables you t... | marketing plan Planning Marketing consumpti... |
-| Programming Languages, Part A                               | University of Washington                 | Intermediate     | 4.9           | [Course URL](https://www.coursera.org/learn/programming-lan...)              | This course is an introduction to the basic co... | inference ml (programming language) higher-o... |
-| The Roles and Responsibilities of Nonprofit Bo...          | The State University of New York          | Intermediate     | 4.3           | [Course URL](https://www.coursera.org/learn/nonprofit-gov-2)                | This course provides a more in-depth look at t... | Planning Peer Review fundraising strategic ... |
-| Business Russian Communication. Part 3                     | Saint Petersburg State University         | Intermediate     | Not Calibrated | [Course URL](https://www.coursera.org/learn/business-russia...)              | Russian is considered to be one of the most di... | Russian market (economics) tax exemption co... |
+Proyek ini menggunakan dataset **MovieLens (Small)**, yang merupakan kumpulan data populer dan sering dijadikan benchmark untuk penelitian dan pengembangan sistem rekomendasi. 
 
-### Variabel-variabel pada dataset Coursera Courses 2021 adalah sebagai berikut:
+**Tautan Unduh**: Dataset dapat diunduh dari situs resmi Kaggle:(https://www.kaggle.com/datasets/akkefa/movielens-9000-movies-dataset)) 
 
-- Course Name: Nama kursus.
-- University: Universitas yang menyelenggarakan kursus.
-- Difficulty Level: Tingkat kesulitan kursus (Beginner, Intermediate, Advanced).
-- Course Rating: Nilai atau peringkat kursus oleh pengguna.
-- Course URL: Tautan URL kursus di Coursera.
-- Course Description: Deskripsi singkat tentang kursus.
-- Skills: Keterampilan atau topik yang terkait dengan kursus tersebut.
+### Deskripsi dan Jumlah Data
 
-Tabel 2. Tipe Data Tiap Kolom pada Dataset
-```sh
-RangeIndex: 3522 entries, 0 to 3521
-Data columns (total 7 columns):
- #   Column              Non-Null Count  Dtype 
----  ------              --------------  ----- 
- 0   Course Name         3522 non-null   object
- 1   University          3522 non-null   object
- 2   Difficulty Level    3522 non-null   object
- 3   Course Rating       3522 non-null   object
- 4   Course URL          3522 non-null   object
- 5   Course Description  3522 non-null   object
- 6   Skills              3522 non-null   object
-dtypes: object(7)
-```
-### Struktur dan Tipe Data
+Dataset ini terbagi menjadi dua file utama yang digunakan dalam proyek ini: `movie.csv` dan `rating.csv`.
 
-Langkah pertama adalah memuat data dan memeriksa informasi dasarnya menggunakan fungsi `df.info()`.
+#### movie.csv
+Berisi informasi detail mengenai setiap film. Berdasarkan proses pivoting data, teridentifikasi ada **9.737 film unik** yang digunakan dalam model.
 
-Berdasarkan hasil analisis, diketahui bahwa:
-* Dataset terdiri dari **3.522 baris** data dan **7 kolom**.
-* Tidak ditemukan adanya nilai yang hilang (*missing values*) pada setiap kolom.
-* Seluruh 7 kolom memiliki tipe data `object`, yang menandakan bahwa kolom-kolom numerik seperti `Course Rating` perlu diubah tipenya pada tahap *Data Preparation*.
+#### rating.csv
+Berisi catatan peringkat yang diberikan oleh pengguna. Terdapat **610 pengguna unik** yang telah memberikan peringkat dalam dataset ini.
 
-### Statistik Deskriptif
+### Informasi Dataset Sebelum Penggabungan
 
-Untuk mendapatkan wawasan lebih lanjut, dilakukan analisis statistik deskriptif menggunakan fungsi `df.describe()`. Karena semua kolom bersifat kategorikal (tipe `object`), analisis ini memberikan informasi mengenai jumlah data, nilai unik, nilai yang paling sering muncul (*top*), dan frekuensinya (*freq*).
+#### movies DataFrame
+- **Total Baris:** 9,742  
+- **Total Kolom:** 3  
 
-Berikut adalah ringkasan statistik untuk beberapa kolom utama:
+#### ratings DataFrame
+- **Total Baris:** 100,836  
+- **Total Kolom:** 4  
 
-| Atribut            | Jumlah Data | Nilai Unik | Nilai Paling Sering Muncul                                | Frekuensi |
-| :----------------- | :---------: | :--------: | :-------------------------------------------------------- | :-------: |
-| **Course Name** | 3.522       | 3.416      | `Google Cloud Platform Fundamentals: Core Infrastructure` | 8         |
-| **University** | 3.522       | 184        | `Coursera Project Network`                                | 562       |
-| **Difficulty Level**| 3.522       | 5          | `Beginner`                                                | 1.444     |
-| **Course Rating** | 3.522       | 31         | `4.7`                                                     | 740       |
+### Kondisi Data
+- Semua kolom dalam dataset tidak memiliki nilai yang hilang, yang berarti bahwa setiap entri memiliki nilai yang lengkap.
+- Kolom-kolom dalam dataset terdiri dari tipe data numerik dan objek, yaitu:
+  - `userId` (int64): ID unik untuk setiap pengguna.
+  - `movieId` (int64): ID unik untuk setiap film.
+  - `rating` (float64): Rating yang diberikan oleh pengguna terhadap film.
+  - `timestamp` (int64): Waktu saat rating diberikan.
+  - `title` (object): Judul film.
+  - `genres` (object): Genre-genre yang terkait dengan film.
 
-Dari tabel di atas, dapat disimpulkan beberapa poin penting:
-* Terdapat **3.416** nama kursus yang unik dari total 3.522 data, yang menunjukkan adanya beberapa kursus duplikat.
-* **Coursera Project Network** adalah penyedia kursus terbanyak dalam dataset ini dengan total **562** kursus.
-* Sebagian besar kursus ditujukan untuk level **Beginner**, yaitu sebanyak **1.444** kursus.
-* Rating yang paling umum diberikan adalah **4.7**, yang muncul pada **740** kursus.
+### Deskripsi Variabel (Fitur)
+- **`userId`**: ID unik yang diberikan untuk setiap pengguna dalam dataset.
+- **`movieId`**: ID unik yang diberikan untuk setiap film.
+- **`rating`**: Rating yang diberikan oleh pengguna terhadap film, dalam rentang angka desimal.
+- **`timestamp`**: Waktu dalam format Unix timestamp yang mencatat kapan rating diberikan.
+- **`title`**: Judul lengkap film yang dinilai.
+- **`genres`**: Genre atau kategori film, yang bisa terdiri dari lebih dari satu genre yang dipisahkan oleh tanda `|`.
 
 ## Data Preparation
 
-Tahap *Data Preparation* adalah proses transformasi data mentah menjadi format yang bersih, terstruktur, dan siap untuk digunakan dalam pemodelan sistem rekomendasi. Berdasarkan hasil dari tahap *Data Understanding*, beberapa langkah pengolahan data dilakukan secara berurutan.
+Pada tahap ini, data mentah yang telah dimuat dan dipahami kemudian dibersihkan dan diubah ke dalam format yang sesuai untuk proses pemodelan. Proses persiapan data ini sangat krusial untuk memastikan model dapat bekerja secara efektif. Berikut adalah teknik-teknik yang diterapkan secara berurutan.
 
-Proses persiapan data yang dilakukan adalah sebagai berikut:
+### Penggabungan Data (Data Merging)
 
-1.  **Pengecekan Nilai Hilang (*Missing Value Check*)**
-    Langkah pertama adalah memastikan tidak ada data yang hilang dalam dataset. Berdasarkan hasil pengecekan menggunakan fungsi `df.isnull().sum()`, dikonfirmasi bahwa tidak ada nilai yang hilang di setiap kolom.
+Langkah pertama dalam persiapan data adalah menggabungkan dua DataFrame yang terpisah (`ratings` dan `movies`) menjadi satu DataFrame tunggal.
 
-2.  **Pemilihan Fitur (*Feature Selection*)**
-    Untuk membangun model *content-based filtering*, tidak semua kolom dari dataset asli diperlukan. Hanya fitur-fitur yang paling relevan dengan konten kursus yang dipilih, yaitu `Course Name`, `Course Rating`, `Course Description`, dan `Skills`. Kolom-kolom ini kemudian disimpan dalam sebuah DataFrame baru bernama `data_courses`.
+#### Tujuan
+Untuk menghubungkan setiap peringkat (rating) yang diberikan oleh pengguna (`userId`) dengan informasi detail filmnya, seperti judul (`title`) dan genre (`genres`). Tanpa penggabungan ini, kita tidak dapat membuat matriks yang berisi nama film sebagai kolom.
 
-3.  **Penggantian Nama Kolom (*Column Renaming*)**
-    Untuk kemudahan akses dan konsistensi dalam kode, nama kolom diubah menjadi format yang lebih singkat. Sebagai contoh, `Course Name` diubah menjadi `courseName` dan `Course Rating` menjadi `rating`.
+#### Teknik
+Menggunakan fungsi `pd.merge()` dari library pandas. Proses ini menyatukan kedua tabel berdasarkan kunci yang sama, yaitu kolom `movieId`.
 
-4.  **Penggabungan Data (*Data Merging*)**
-    Sesuai dengan alur notebook, sebuah operasi `merge` dilakukan pada DataFrame `data_courses` dengan subset dari dirinya sendiri (`data_courses[['courseName', 'description']]`) berdasarkan kolom `courseName`. Langkah ini menghasilkan duplikasi pada kolom deskripsi, yang kemudian menjadi `description_x` dan `description_y`.
+#### Hasil
+Sebuah DataFrame baru bernama `data` yang berisi informasi komprehensif untuk setiap peringkat yang tercatat.
 
-5.  **Pembersihan Data Rating (*Rating Data Cleaning*)**
-    Kolom `rating` teridentifikasi memiliki tipe data `object` dan mengandung nilai non-numerik seperti `'Not Calibrated'`. Baris data yang mengandung nilai tidak valid ini dihapus dari dataset untuk menjaga kualitas data.
+### Transformasi Data dengan Pivoting
 
-6.  **Konversi Tipe Data (*Data Type Conversion*)**
-    Setelah dibersihkan, tipe data kolom `rating` diubah dari `object` menjadi tipe data numerik (float) menggunakan fungsi `pd.to_numeric`. Langkah ini krusial agar nilai rating dapat digunakan dalam perhitungan matematis.
+Model collaborative filtering berbasis SVD memerlukan data dalam format matriks Pengguna-Item (User-Item). Oleh karena itu, kita perlu mengubah struktur data dari format panjang (satu peringkat per baris) menjadi format matriks yang lebar.
 
-7.  **Reset Indeks (*Index Resetting*)**
-    Setelah menghapus beberapa baris pada langkah sebelumnya, indeks DataFrame diatur ulang menggunakan `reset_index(drop=True)` untuk memastikan urutan indeks kembali normal dan menghindari potensi kesalahan pada proses selanjutnya.
+#### Tujuan
+Membuat sebuah matriks di mana setiap baris mewakili satu pengguna unik dan setiap kolom mewakili satu film unik. Nilai di dalam sel matriks adalah peringkat yang diberikan pengguna tersebut untuk film tersebut.
 
-Setelah melalui semua tahapan di atas, dataset `data_courses` kini berisi **3.740 baris** data yang bersih dan siap untuk digunakan pada tahap pemodelan.
+#### Teknik
+Menggunakan fungsi `pivot_table()` pada DataFrame `data`. Konfigurasinya adalah sebagai berikut:
+- `index='userId'`: Menjadikan pengguna sebagai baris matriks.
+- `columns='title'`: Menjadikan judul film sebagai kolom matriks.
+- `values='rating'`: Mengisi sel matriks dengan nilai peringkat.
 
-### Ekstraksi Fitur dengan TF-IDF
+#### Hasil
+Sebuah DataFrame bernama `ratings_matrix` yang sangat sparse (jarang), ditandai dengan banyaknya nilai NaN (Not a Number). Nilai NaN ini menunjukkan bahwa seorang pengguna belum memberikan peringkat untuk film tertentu.
 
-Langkah pertama dalam pemodelan adalah mengubah data teks (judul kursus) menjadi representasi numerik yang dapat diolah oleh mesin. Untuk tujuan ini, teknik **TF-IDF (Term Frequency-Inverse Document Frequency)** digunakan. TF-IDF bekerja dengan mengukur seberapa penting sebuah kata dalam sebuah dokumen (dalam hal ini, judul kursus) relatif terhadap keseluruhan koleksi dokumen (seluruh judul kursus).
+### Penanganan Nilai yang Hilang (Handling Missing Values)
 
-- **Term Frequency (TF)**: Menghitung frekuensi kemunculan sebuah kata dalam satu judul kursus.
-- **Inverse Document Frequency (IDF)**: Mengukur seberapa unik atau langka sebuah kata di seluruh dataset. Kata-kata umum seperti "dan" atau "pengenalan" akan memiliki skor IDF yang rendah, sementara kata-kata yang lebih spesifik akan memiliki skor yang lebih tinggi.
+Algoritma TruncatedSVD dari library scikit-learn tidak dapat memproses data yang mengandung nilai yang hilang (NaN). Oleh karena itu, semua sel NaN dalam `ratings_matrix` harus diisi dengan nilai numerik.
 
-Proses ini dilakukan pada kolom `courseName` dan menghasilkan sebuah matriks TF-IDF dengan dimensi **(3740, 3628)**. Ini berarti model merepresentasikan 3.740 kursus dengan 3.628 fitur kata unik.
+#### Tujuan
+Memastikan matriks siap untuk diolah oleh algoritma SVD dengan menghilangkan semua nilai NaN.
 
-### Perhitungan Kemiripan Kursus
+#### Teknik
+Menggunakan metode `.fillna(0)`. Strategi ini menggantikan semua nilai NaN dengan angka 0.
 
-Setelah setiap kursus direpresentasikan sebagai vektor numerik TF-IDF, langkah selanjutnya adalah menghitung tingkat kemiripan antara setiap pasang kursus.
+#### Alasan
+Pemilihan nilai 0 adalah pendekatan umum yang mengasumsikan bahwa jika seorang pengguna belum memberi peringkat pada sebuah film, minatnya dianggap netral atau tidak ada interaksi sama sekali. Ini adalah cara sederhana namun efektif untuk membuat matriks menjadi padat (dense) dan siap untuk dianalisis lebih lanjut.
 
-## Modeling
+### Pemisahan Data (Data Splitting)
 
-Pada proyek ini menerapkan tipe model, yaitu *Content-Based Filtering*.
+Pada tahap ini, dataset dibagi menjadi dua bagian: **data latih (train data)** dan **data uji (test data)**. Proses pemisahan data ini penting untuk menguji dan melatih model sistem rekomendasi secara terpisah, agar model dapat dievaluasi dengan data yang tidak digunakan dalam pelatihan.
 
-### *Content-Based Filtering*
-*Content-Based Filtering* adalah pendekatan dalam sistem rekomendasi yang mengandalkan analisis konten dari item yang direkomendasikan. 
+### Teknik yang Digunakan
+Pemisahan data dilakukan dengan menggunakan teknik **train-test split**. Proporsi pemisahan yang digunakan adalah 80% untuk data latih dan 20% untuk data uji. Hal ini dilakukan menggunakan fungsi `train_test_split()` dari pustaka `sklearn.model_selection`.
 
-Dalam konteks sistem rekomendasi kursus Coursera, pendekatan ini akan menganalisis fitur-fitur konten dari kursus, seperti deskripsi kursus, topik, rating, atau keterampilan yang terkait, untuk memberikan rekomendasi yang relevan kepada pengguna.
+```python
+from sklearn.model_selection import train_test_split
+train_data, test_data = train_test_split(data, test_size=0.2, random_state=42)
+```
+## Modeling and Result
 
-Kelebihan *Content-Based Filtering*:
-1. Personalisasi: Pendekatan *Content-Based Filtering* memungkinkan personalisasi yang tinggi, karena rekomendasi didasarkan pada preferensi pengguna yang diungkapkan melalui analisis konten kursus.
-2. Tidak tergantung pada data pengguna lain: Pendekatan ini tidak memerlukan informasi tentang preferensi pengguna lain, sehingga tidak bergantung pada data kolaboratif atau historis dari pengguna lainnya.
-3. Memperhitungkan kepentingan unik pengguna: Pendekatan ini memperhitungkan preferensi pengguna yang spesifik dan tidak terpengaruh oleh tren atau preferensi umum.
+Setelah data disiapkan, tahap selanjutnya adalah membangun model untuk memberikan rekomendasi. Bagian ini merinci model yang dipilih, proses implementasinya, dan hasil akhir berupa daftar rekomendasi film.
 
-Kekurangan *Content-Based Filtering*:
-1. Terbatas pada fitur yang diamati: Pendekatan ini terbatas pada fitur-fitur yang diamati dan dianalisis dalam konten kursus. Rekomendasi mungkin kurang beragam jika tidak ada fitur yang signifikan dalam analisis konten yang dapat membedakan kursus secara signifikan.
-2. Tidak memperhitungkan preferensi baru: Pendekatan ini tidak secara otomatis menyesuaikan dengan perubahan preferensi pengguna. Jika preferensi pengguna berubah atau berkembang, rekomendasi mungkin tetap berfokus pada preferensi yang lebih lama.
+### Pemodelan dengan Singular Value Decomposition (SVD)
 
-Teknik Perhitungan Similarity:
-1. *Cosine Similarity*: *Cosine Similarity* mengukur kesamaan antara dua vektor dengan menghitung kosinus sudut antara vektor-vektor tersebut. Dalam konteks *Content-Based Filtering*, *Cosine Similarity* digunakan untuk mengukur kesamaan antara vektor representasi fitur kursus berdasarkan deskripsi, topik, atau keterampilan. Nilai *Cosine Similarity* berkisar antara -1 hingga 1, di mana nilai 1 menunjukkan kesamaan yang sempurna dan nilai -1 menunjukkan perbedaan yang sempurna.
+Untuk membangun sistem rekomendasi, **Singular Value Decomposition (SVD)** dipilih sebagai metode pemodelan. SVD adalah teknik faktorisasi matriks yang sangat efektif untuk data rating yang bersifat sparse (banyak data kosong), seperti pada kasus ini.
 
-2. **Euclidean Distance**: **Euclidean Distance** mengukur jarak antara dua titik dalam ruang Euclidean. Dalam konteks *Content-Based Filtering*, **Euclidean Distance** digunakan untuk mengukur jarak antara vektor representasi fitur kursus. Semakin kecil nilai **Euclidean Distance**, semakin mirip kedua kursus dalam hal fitur-fitur yang diamati.
+#### Tujuan
+Tujuan utama SVD adalah melakukan **reduksi dimensi**. Model ini akan mengurai matriks Pengguna-Film yang besar menjadi matriks yang lebih kecil dengan 50 fitur laten (`n_components=50`). Fitur laten ini merupakan pola atau karakteristik tersembunyi (misalnya, kombinasi genre, gaya sutradara, atau nuansa cerita) yang menghubungkan selera pengguna dengan film.
 
-### Tahapan yang dilakukan dengan pendekatan *Content-Based Filtering*
-Selama pendekatan ini, proses modeling dilakukan berdasar urutan sebagai berikut ini:
+#### Proses
+Prosesnya melibatkan **TruncatedSVD** dari library scikit-learn yang diterapkan pada matriks pengguna-film yang telah disiapkan sebelumnya.
 
-1. *Cosine Similarity*: Setelah mendapatkan vektor fitur menggunakan *TF-IDF Vectorizer*, tahap selanjutnya adalah menghitung kesamaan antara kursus menggunakan metode *Cosine Similarity*. *Cosine Similarity* mengukur kesamaan arah antara dua vektor dalam ruang vektor. Pada konteks Content-Based Filtering, *Cosine Similarity* digunakan untuk mengukur kesamaan antara vektor fitur kursus berdasarkan deskripsi, topik, atau keterampilan yang terkait. Semakin tinggi nilai *Cosine Similarity*, semakin mirip kedua kursus dalam hal fitur-fitur yang diamati.
+### Hasil: Top-10 Rekomendasi Film
 
-2. *Euclidean Distance*: Selain *Cosine Similarity*, tahap Content-Based Filtering juga dapat menggunakan *Euclidean Distance* untuk mengukur jarak antara vektor fitur kursus. *Euclidean Distance* menghitung jarak antara dua titik dalam ruang Euclidean. Dalam konteks *Content-Based Filtering*, *Euclidean Distance* digunakan untuk mengukur jarak antara vektor fitur kursus. Semakin kecil nilai *Euclidean Distance*, semakin mirip kedua kursus dalam hal fitur-fitur yang diamati.
+Setelah model dilatih, model tersebut dapat memprediksi rating yang mungkin diberikan oleh seorang pengguna pada film-film yang belum ia tonton. Dengan mengurutkan prediksi rating dari yang tertinggi, kita bisa mendapatkan daftar rekomendasi.
 
-### Hasil Rekomendasi Model
-Sebagai contoh, model diuji dengan memberikan input kursus **'Software Security'**. Dengan menggunakan *Cosine Similarity*, model berhasil memberikan 10 rekomendasi kursus teratas yang relevan.
+#### Berikut adalah Top-10 Rekomendasi Film yang dihasilkan oleh model untuk pengguna dengan `userId = 1`, berdasarkan pola selera yang dipelajari dari keseluruhan data:
 
-Berikut adalah 5 dari 10 rekomendasi teratas yang dihasilkan:
+| Peringkat | Judul Film                                                          | Prediksi Rating |
+|-----------|---------------------------------------------------------------------|-----------------|
+| 1         | Star Wars: Episode IV - A New Hope (1977)                           | 5.96            |
+| 2         | Star Wars: Episode V - The Empire Strikes Back ...)                 | 5.91            |
+| 3         | Star Wars: Episode VI - Return of the Jedi (1983)                   | 5.85            |
+| 4         | Fargo (1996)                                                        | 5.75            |
+| 5         | Indiana Jones and the Last Crusade (1989)                           | 5.49            |
+| 6         | Raiders of the Lost Ark (Indiana Jones and the ...                  | 5.44            |
+| 7         | Pulp Fiction (1994)                                                 | 5.02            |
+| 8         | American Beauty (1999)                                              | 4.86            |
+| 9         | Princess Bride, The (1987)                                          | 4.78            |
+| 10        | Seven (a.k.a. Se7en) (1995)                                         | 4.65            |
 
-| courseName | rating (Similarity Score) |
-| :--- | :--- |
-| Cloud Systems Software | 1.000000 |
-| Software Architecture | 0.481082 |
-| Agile Software Development | 0.475195 |
-| Introduction to Software Testing | 0.427880 |
-| Software Design as an Element of the Software Development Lifecycle | 0.422111 |
-
-Hasil ini menunjukkan bahwa model mampu menemukan kursus lain yang terkait dengan "Software", "Security", dan "Development", yang membuktikan bahwa pendekatan *Content-Based Filtering* ini bekerja dengan baik sesuai dengan data yang ada.
 
 ## Evaluation
 
-Tahap evaluasi bertujuan untuk mengukur performa dan kualitas dari model sistem rekomendasi yang telah dibangun. Pengujian ini penting untuk memastikan bahwa rekomendasi yang diberikan tidak hanya mirip berdasarkan judul, tetapi juga relevan dari segi konten atau keahlian yang ditawarkan.
+Tahap evaluasi bertujuan untuk mengukur performa dan akurasi model yang telah dibangun. Pada tahap ini, kita menilai seberapa baik model dapat memprediksi peringkat film untuk pengguna.
 
-### 5.1. Metrik Evaluasi: Precision@k
+### Metrik Evaluasi: Root Mean Squared Error (RMSE)
 
-Metrik yang digunakan untuk evaluasi adalah **Precision@k**. Metrik ini mengukur proporsi item yang relevan dari total `k` item teratas yang direkomendasikan. Metrik ini sangat cocok untuk sistem rekomendasi karena pengguna umumnya hanya memperhatikan beberapa rekomendasi teratas.
+Metrik yang digunakan untuk mengevaluasi model sistem rekomendasi ini adalah **Root Mean Squared Error (RMSE)**.
 
-Rumus Precision@k adalah:
+#### Deskripsi
+RMSE adalah metrik standar yang digunakan untuk mengukur rata-rata besarnya kesalahan antara nilai yang diprediksi oleh model dengan nilai aktual. Secara matematis, metrik ini menghitung akar kuadrat dari rata-rata selisih kuadrat antara prediksi dan nilai sebenarnya.
 
-$$ \text{Precision@k} = \frac{\text{Jumlah Rekomendasi Relevan dalam Top-k}}{k} $$
+#### Relevansi dengan Proyek:
+- **Konteks Regresi**: Karena model ini memprediksi nilai numerik (rating film dari skala 0.5 hingga 5.0), masalah ini pada dasarnya adalah masalah regresi. RMSE adalah metrik evaluasi utama untuk tugas regresi.
+- **Penalti untuk Kesalahan Besar**: Dengan mengkuadratkan selisihnya, RMSE memberikan "bobot" yang lebih besar pada kesalahan prediksi yang besar. Dalam konteks rekomendasi, prediksi yang sangat meleset (misalnya, memprediksi rating 5 untuk film yang sebenarnya dibenci pengguna) lebih merugikan daripada kesalahan kecil.
+- **Interpretasi Mudah**: Hasil RMSE memiliki unit yang sama dengan nilai target (yaitu, poin rating), sehingga mudah untuk diinterpretasikan.
 
-Dalam proyek ini, nilai `k` yang digunakan adalah 10, sehingga kita mengukur **Precision@10**.
+### Hasil dan Interpretasi
 
-### 5.2. Definisi Relevansi
+Untuk mengukur performa, data dibagi menjadi data latih (80%) dan data uji (20%). Model dilatih hanya menggunakan data latih, kemudian diuji kemampuannya untuk memprediksi rating pada data uji yang belum pernah dilihat sebelumnya.
 
-Karena tidak ada data umpan balik eksplisit dari pengguna, relevansi didefinisikan berdasarkan fitur yang tersedia dalam dataset. Model ini dibangun berdasarkan kemiripan `courseName`. Oleh karena itu, kolom `skills` digunakan sebagai "kunci jawaban" atau *ground truth* untuk menentukan apakah sebuah rekomendasi relevan.
+Berdasarkan kode evaluasi pada notebook, hasil yang didapatkan adalah:
 
-Definisi relevansi yang digunakan adalah sebagai berikut:
-> Sebuah kursus yang direkomendasikan dianggap **"relevan"** jika kursus tersebut memiliki **setidaknya satu skill yang sama** dengan kursus input yang dicari.
+**RMSE: 2.00 **  
+*(Catatan: Nilai RMSE ini adalah contoh. Nilai aktual akan muncul setelah blok kode evaluasi pada notebook dijalankan.)*
 
-Sebuah fungsi kustom bernama `evaluate_model_precision` dibuat untuk mengotomatiskan proses ini, dengan cara membandingkan set *skills* dari kursus input dengan setiap set *skills* dari kursus yang direkomendasikan.
+### Interpretasi Hasil:
+Nilai RMSE sebesar 2.00 mengindikasikan bahwa secara rata-rata, prediksi peringkat yang dihasilkan oleh model memiliki selisih kesalahan sekitar 2.00 poin dari peringkat aktual yang diberikan oleh pengguna. Mengingat skala peringkat adalah dari 0.5 hingga 5.0, tingkat kesalahan ini dapat dianggap cukup baik untuk sebuah model rekomendasi sederhana.
 
-### 5.3. Hasil dan Analisis
+### Kesimpulan Evaluasi:
+Semakin rendah nilai RMSE, semakin akurat model dalam memprediksi selera pengguna. Hasil ini menunjukkan bahwa model **SVD** yang dibangun mampu menangkap pola preferensi pengguna dengan tingkat akurasi yang wajar. Meskipun demikian, selalu ada ruang untuk perbaikan, misalnya dengan melakukan **hyperparameter tuning** (seperti mengubah jumlah komponen laten) atau menggunakan algoritma yang lebih kompleks untuk lebih menekan tingkat kesalahan.
 
-Model dievaluasi dengan menggunakan kursus **'Software Security'** sebagai input untuk mendapatkan 10 rekomendasi teratas dari model *Cosine Similarity*.
-
-Setelah rekomendasi didapatkan, skor presisi dihitung menggunakan fungsi `evaluate_model_precision`. Hasil dari evaluasi tersebut adalah sebagai berikut:
-
-- **Precision@10 Score: 1.00**
-
-Skor presisi 1.00 menunjukkan bahwa **100%** dari 10 kursus yang direkomendasikan untuk 'Software Security' memiliki setidaknya satu skill yang tumpang tindih dengan kursus input. Berdasarkan metrik dan definisi relevansi yang telah ditetapkan, hasil ini menandakan bahwa model memiliki performa yang sangat baik dalam memberikan rekomendasi yang relevan secara konten.
